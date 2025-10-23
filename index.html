@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safahat Sözlüğü</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background-color: #f4efe6;
+            color: #2b2b2b;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        
+        #cover {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80') center/cover no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fdf8ef;
+            text-align: center;
+        }
+
+        .cover-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+        }
+
+        .cover-content p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+        }
+
+        #start-btn {
+            background-color: #c59d5f;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        #start-btn:hover {
+            background-color: #b1823e;
+            transform: scale(1.05);
+        }
+
+       
+        #book {
+            padding: 3rem 1rem;
+            min-height: 100vh;
+            display: none;
+            background: #f4efe6;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease-in-out;
+        }
+
+        #book.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .book-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pages-container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            height: 800px;
+            position: relative;
+            perspective: 1500px;
+        }
+
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: #fffaf0;
+            border: 2px solid #d8b989;
+            box-shadow: 0 0 25px rgba(0,0,0,0.15);
+            padding: 2.5rem;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .left-page {
+            left: 0;
+            border-radius: 15px 0 0 15px;
+            transform-origin: right center;
+            border-right: 3px solid #e8d5b5;
+        }
+
+        .right-page {
+            right: 0;
+            border-radius: 0 15px 15px 0;
+            transform-origin: left center;
+            border-left: 2px solid #e8d5b5;
+        }
+
+        .page-content {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+      
+        .biography-content h2 {
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            border-bottom: 3px solid #d8b989;
+            padding-bottom: 0.8rem;
+        }
+
+        .biography-content h3 {
+            color: #654321;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.4rem;
+        }
+
+        .biography-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            text-align: justify;
+            font-size: 1.05rem;
+            text-indent: 2rem;
+        }
+
+   
+        .preface-content h2 {
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            border-bottom: 3px solid #d8b989;
+            padding-bottom: 0.8rem;
+        }
+
+        .preface-content p {
+            margin-bottom: 1.2rem;
+            line-height: 1.7;
+            text-align: justify;
+            font-size: 1.1rem;
+            text-indent: 2rem;
+        }
+
+        .signature {
+            margin-top: 2rem;
+            font-style: italic;
+            color: #666;
+            text-align: center;
+            font-size: 1rem;
+            border-top: 2px solid #e8d5b5;
+            padding-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+  
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #c59d5f;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-arrow:hover {
+            background: #b1823e;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        #prev-page {
+            left: -80px;
+        }
+
+        #next-page {
+            right: -80px;
+        }
+
+        .page.hidden {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .page-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .page-content::-webkit-scrollbar-thumb {
+            background: #d8b989;
+            border-radius: 4px;
+        }
+
+        .page-content::-webkit-scrollbar-thumb:hover {
+            background: #b1823e;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-content {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes bookOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.8) rotateX(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateX(0);
+            }
+        }
+
+        .pages-container {
+            animation: bookOpen 1.2s ease-out;
+        }
+
+        .page.turning {
+            z-index: 2;
+        }
+
+        .safahat-content h2 {
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            border-bottom: 3px solid #d8b989;
+            padding-bottom: 0.8rem;
+        }
+
+        .safahat-content h3 {
+            color: #654321;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.4rem;
+        }
+
+        .safahat-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            text-align: justify;
+            font-size: 1.05rem;
+            text-indent: 2rem;
+        }
+
+        .spacer {
+            height: 80px;
+        }
+
+        #search-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease-in-out;
+        }
+
+        #search-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #search-box {
+            background: rgba(255, 250, 240, 0.95);
+            border: 2px solid #d8b989;
+            border-radius: 25px;
+            padding: 12px 20px;
+            width: 300px;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        #search-box:focus {
+            outline: none;
+            border-color: #b1823e;
+            box-shadow: 0 4px 20px rgba(193, 149, 95, 0.3);
+            transform: scale(1.02);
+        }
+
+        #search-box::placeholder {
+            color: #8b4513;
+            opacity: 0.7;
+        }
+
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 250, 240, 0.98);
+            border: 2px solid #d8b989;
+            border-radius: 15px;
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #search-results.show {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e8d5b5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            background: #f4efe6;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-word {
+            font-weight: bold;
+            color: #8b4513;
+            font-size: 1.1rem;
+        }
+
+        .search-meaning {
+            color: #654321;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+  
+    <section id="cover">
+        <div class="cover-content">
+            <h1>Safahat Sözlüğü</h1>
+            <p>Mehmet Akif Ersoy'un eserlerine yolculuk...</p>
+            <button id="start-btn">Başla</button>
+        </div>
+    </section>
+
+    <div id="search-container">
+        <input type="text" id="search-box" placeholder="Kelime ara...">
+        <div id="search-results"></div>
+    </div>
+
+    <section id="book">
+        <div class="book-container">
+            <button class="nav-arrow" id="prev-page">&#10094;</button>
+            
+            <div class="pages-container">
+               
+                <div class="page left-page active" id="page-1-left">
+                    <div class="page-content">
+                        <div class="cover-text">
+                            <h2 style="text-align: center; font-weight: bold;">MEHMET AKİF ERSOY</h2>
+                            <h2 style="text-align: center; font-weight: bold;">SAFAHAT SÖZLÜĞÜ</h2>
+                            <div class="spacer"></div>
+                            <div class="project-info">
+                                <p style="text-align: center;">DİLİMİZ ZENGİNLİĞİMİZ PROJESİ</p>
+                                <p style="text-align: center;">İMMİB ERKAN AVCI TEKNİK VE MESLEK ANADOLU LİSESİ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page active" id="page-1-right">
+                    <div class="page-content">
+                        <div class="preface-content">
+                            <h2>ÖN SÖZ</h2>
+                            <p>Sözlükler, kendileri aracılığıyla metinleri anladığımız kelime, deyim, tabir, kavram, terim vb. sözcüklerin anlamlarını gösteren eserlerdir. Bilhassa sanat değeri taşıyan, estetik unsurları içeren edebî eserlere çeşitli sözlükler olmadan nüfuz edilemez.</p>
+                            <p>Bu yüzden edebi metinleri yorumlamak için, sözcük, terim, deyim, kavram, gösterilen vb. anlamları içeren sözlükler yazılmalıdır. Bu amaç doğrultusunda Türk edebiyatının müstesna eserlerinden biri olan İstiklal Şairimiz Mehmet Akif Ersoy'un "SAFAHAT" adlı eserinin sözlük çalışması yapılmıştır.</p>
+                            <p>Sözlükler, kendileri aracılığıyla metinleri anladığımız kelime, deyim, tabir, kavram,
+terim vb. sözcüklerin anlamlarını gösteren eserlerdir. Bilhassa sanat değeri taşıyan, estetik
+unsurları içeren edebî eserlere çeşitli sözlükler olmadan nüfuz edilemez.
+Bu yüzden edebi metinleri yorumlamak için, sözcük, terim, deyim, kavram, gösterilen vb.
+anlamları içeren sözlükler yazılmalıdır. Bu amaç doğrultusunda Türk edebiyatının müstesna
+eserlerinden biri olan İstiklal Şairimiz Mehmet Akif Ersoy’un “SAFAHAT” adlı eserinin
+sözlük çalışması yapılmıştır.</p>
+
+<p>Mehmet Akif şiir, nesir ve fikir alanındaki hünerini Safahat'ta ortaya koymuştur.
+Safahat Türk toplumunda büyük tesir uyandırmış bir eserdir hatta öyle ki günümüzde en çok
+sevilen ve okunan kitaplar arasında yer alır. Safahat kelime anlamı olarak "hayatın değişik
+yüzleri, görünümleri ve evreler" anlamına gelmektedir. Mehmet Akif Ersoy, yaşadığı devrin
+siyasi ve sosyal hayatını çok iyi analiz etmiş ve eserlerinde de başarılı bir şekilde işlemiş
+edebiyatçılarımızdandır. Akif, kimilerine göre bir şair, kimilerine göre bir fikir adamı,
+kimilerine göre ise manzum bir hikâyecidir. Yedi kitap olarak yayımlanan şiir külliyatı
+Safahat, Akif'in bütün bu yönlerini barındıran eser olması açısından ayrı bir öneme sahiptir
+Sözlük çalışmamızda “SÖZLÜK ÖZGÜRLÜKTÜR” sloganıyla edebiyat tarihimizde 
+eserleriyle Türkçeyi ustalıkla nasıl kullandığını gösteren Akif’in “Safahat” adlı eserinin
+öğrencilerimiz tarafından anlaşılarak okunması ve dilimizin zenginliklerinin “Safahat”tan
+yola çıkarak öğrencilerimize kazandırılması amaçlanmıştır.</p>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page left-page hidden" id="page-2-left">
+                    <div class="page-content">
+                        <div class="biography-content">
+                            <h2>MEHMET AKİF ERSOY (1873-1936)</h2>
+                            <p>Mehmet Âkif Ersoy 20 Aralık 1873'te İstanbul'da, Fatih ilçesi Sarıgüzel mahallesinde dünyaya geldi. Annesi Buhara'dan Anadolu'ya geçmiş bir ailenin kızı olan Emine Şerif Hanım; babası ise Kosova doğumlu, Fatih Camii medrese hocalarından Mehmet Tahir Efendi'dir. Babası, ona ebced hesabıyla doğum tarihini ifade eden "Ragîf" adını verdi. Fakat telaffuzu zor geldiğinden arkadaşları ve annesi ona "Âkif" ismiyle seslendi, zamanla bu ismi benimsedi.</p>
+                            <h3>Eğitim Hayatı</h3>
+                            <p>İlköğrenimine Fatih'te Emir Buhari Mahalle Mektebi'nde başladı. İki yıl sonra iptidai (ilkokul) bölümüne geçti ve babasından Arapça öğrenmeye başladı. Ortaöğrenimine Fatih Merkez Rüştiyesi'nde başladı (1882). Aynı zamanda Fatih Camii'nde Farsça derslerini takip etti. Mehmet Âkif, rüştiyedeki eğitimi boyunca Türkçe, Arapça, Farsça ve Fransızca dillerinde hep birinci oldu.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page hidden" id="page-2-right">
+                    <div class="page-content">
+                        <div class="biography-content">
+                            <h3>Eğitim Hayatı (Devam)</h3>
+                            <p>Rüştiyeyi bitirdikten sonra 1885'te dönemin gözde okullarından Mülkiye İdadisi'ne kaydoldu. 1888'de okulun yüksek kısmına devam etmekte iken babasını kaybetti. Ertesi yıl büyük Fatih yangınında evlerinin yanması aileyi yoksulluğa düşürdü. Babasının öğrencisi Mustafa Sıtkı aynı arsa üzerine küçük bir ev yaparak aileyi bu eve yerleştirdi.</p>
+                            <h3>Veterinerlik Eğitimi</h3>
+                            <p>Mehmet Âkif öncelikle meslek sahibi olmak ve yatılı okulda okumak istediği için Mülkiye İdadisi'ni bıraktı. O yıllarda yeni açılan ve ilk sivil veteriner yüksekokulu olan Ziraat ve Baytar Mektebi'ne (Tarım ve Veterinerlik Okulu) kaydoldu. Okul yıllarında spora büyük ilgi gösterdi; başta güreş ve yüzücülük olmak üzere uzun yürüyüş, koşma ve gülle atma yarışlarına katıldı; şiire olan ilgisi okulun son iki yılında arttı. Mektebin baytarlık bölümünü 1893 yılında birincilikle bitirdi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page left-page hidden" id="page-3-left">
+                    <div class="page-content">
+                        <div class="biography-content">
+                            <h3>Yazın Hayatı ve Milli Mücadele</h3>
+                            <p>II. Meşrutiyet'in büyük etkisinde kalan Âkif, arkadaşı Eşref Edip ve Ebül'ula Mardin'in çıkardığı ve ilk sayısı 27 Ağustos 1908'de yayımlanan Sırat-ı Müstakim dergisinin başyazarı oldu. Balkan Savaşı, Çanakkale Muharebeleri ve Kurtuluş Savaşı dönemlerinde çeşitli görevlerde bulunup, Balıkesir'e giderek 6 Şubat 1920 günü Zağnos Paşa Camii'nde çok heyecanlı bir hutbe verdi. Halkın beklenmedik ilgisi karşısında daha birçok yerde hutbe verdi, konuşmalar yaptı ve İstanbul'a döndü.</p>
+                            <h3>İstiklal Marşı</h3>
+                            <p>1921'de Ankara'da Taceddin Dergâhı'na yerleşen Mehmet Âkif, 500 lira ödül konularak açılan İstiklâl Marşı yarışmasına başta katılmadı. Millî Eğitim Bakanı Hamdullah Suphi Bey'in ricası üzerine arkadaşı Hasan Basri Beyin teşvikiyle ikna oldu. Onun orduya ithaf ettiği İstiklâl Marşı, 17 Şubat günü Sırat-ı Müstakim ve Hâkimiyet-i Milliye'de yayımlandı.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page hidden" id="page-3-right">
+                    <div class="page-content">
+                        <div class="biography-content">
+                            <h3>İstiklal Marşı (Devam)</h3>
+                            <p>Hamdullah Suphi Bey tarafından mecliste okunup ayakta dinlendikten sonra 12 Mart 1921 Cumartesi günü saat 17:45'te Milli Marş olarak kabul edildi. Âkif, ödül olarak verilen 500 lirayı hayır kurumuna bağışladı.</p>
+                            <h3>Vefatı ve Mirası</h3>
+                            <p>Kurtuluş Savaşı ve zafer sonrası uzunca bir süre Mısır'da yaşayan Milli Şâirimiz Mehmet Âkif Ersoy, 17 Haziran 1936'da tedavi için İstanbul'a döndü. 27 Aralık 1936 tarihinde İstanbul'da, Beyoğlu'ndaki Mısır Apartmanı'nda vefat etti, Edirnekapı Şehitliğinde yatmaktadır. En önemli iki eseri İstiklal Marşı ve şiirlerini yedi kitap halinde topladığı Safahat'tır.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page left-page hidden" id="page-4-left">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <h2>SAFAHAT</h2>
+                            <p>Mehmed Âkif Ersoy'un (ö. 1936) yedi kitaptan oluşan şiir külliyatı.</p>
+                            <p>Mehmed Âkif'in gençlik yıllarında çok sayıda şiir yazdığı bilinmektedir. Dergilerde ve dostlarında bulunan örneklere ve kendi ifadesine göre bu şiirler Tanzimat döneminde bazı değişikliklerle devam eden divan şiiri, özellikle de Ziyâ Paşa ve Muallim Nâci, kısmen Abdülhak Hâmid tarzında yazılmıştır. Kitaplarına almadığı bu tür şiirlerden daha sonra vazgeçtiği, hiçbir şiirinin yayımlanmadığı 1901-1908 yılları arasında hayalden uzak, içinde yaşadığı toplumun meselelerine çözüm arayan bir yolda kararlı olduğu anlaşılmaktadır.</p>
+                            <p>İlk defa 1329'da (1911) İstanbul'da basılan ve Safahat adını taşıyan kitap eserin diğer kitaplarına göre hacimce en geniş olanıdır ve tamamı 1908-1910 yıllarında Sırât-ı Müstakîm'de yayımlanmış manzumeleri ihtiva etmektedir. Şair, okuyucuya hitaben baş tarafa eklediği beş beyitlik başlıksız manzum parçada, şiirde sanat anlayışının tasannudan uzak olduğunu, sadece kendi sıkıntılarını muhatabına aktarma arzusu taşıdığını ifade eder.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page hidden" id="page-4-right">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <p>Bu kitaptaki şiirlerin en eskisi, neşri sırasında alt tarafına konulan kayda göre 23 Haziran 1904 tarihini taşıyan "Bir Mersiye"dir. Şiirlerin çoğu şairin kendi çevresinde müşahede ettiği toplumun acılarını dile getirir. Böylece daha sonraki bir manzumesinde belirteceği, "İnan ki her ne demişsem görüp de söylemişim" formülü bu ilk kitabından itibaren gerçekleşmeye başlamıştır. Mehmed Âkif'in toplumun alt tabakasına mensup insanların hastalık, ölüm, fakirlik, sefalet, iptilâlar ve kötü yönetim karşısındaki çaresizliğini, suskunluğunu bir fotoğraf gerçekçiliğiyle ve küçük manzum hikâyeler şeklinde anlattığı şiirleri şunlardır: "Hasta", "Küfe", "Hasır", "Meyhane", "Mezarlık", "Bayram", "Selma", "Seyfi Baba", "Kör Neyzen", "İstibdat", "Mahalle Kahvesi", "Köse İmam", "Âhiret Yolu", "Yemişçi İhtiyar."</p>
+                            <p>Yine toplumun daha üst yapıda ve daha soyut meselelerini dile getiren manzumeleri de "Durmayalım", "Geçinme Belâsı", "Merhum İbrâhim Bey", "Azim", "Cânan Yurdu", "Bir Mezar Taşına Yazılmıştı" ve "Âmin Alayı"dır. "Kocakarı ile Ömer" ve "Dirvas" başlıklı, konusunu İslâm tarihinden alan iki manzum hikâye ile birer ideal devlet adamı portresi çizerken "Acem Şahı", "İstibdat", "Hürriyet" başlıklı şiirler şairin dönemin siyasî yöneticilerine karşı tenkitleridir.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page left-page hidden" id="page-5-left">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <h2>SAFAHAT (Devam)</h2>
+                            <p>Bunlara daha soyut / felsefî mânada insanı ele aldığı "İnsan", "Bir Resmin Arkasına", "Bu da Bir Mezar Taşı İçin Yazılmıştı", "Tercümedir", "Hüsrân-ı Mübîn", "Hasbihal" adlı manzumeler eklendiğinde ilk Safahat'taki kırk dört şiirin toplumu ve içindeki insanı işlemekte olduğu görülür. Bunların dışında kalanlardan "Fâtih Camii" çocukluk hâtıralarını, "Bir Mersiye", "Selma", "Merhum İbrâhim Bey" yakınlarının ölümü üzerine duygularını, "Ressam Haklı", "Şair Huzurında Münekkit", "Bebek yahud Hakk-ı Karâr" şairin nükte ve hiciv tarafını yansıtır.</p>
+                            <p>Çoğu lirik tarzda olan "Hasbihal", "Cânan Yurdu", "Gül-Bülbül", "İstiğrak" ve özellikle "Tevhid yahud Feryad" şairin dinî-mistik duygularını ifade eder.</p>
+                            <p>Eserin bundan sonraki bölümleri yine Safahat üst başlığı ile fakat ayrı adlarla yayımlanmıştır. İkinci kitap Süleymaniye Kürsüsünde adıyla tek ve uzun bir metindir. 1912'de Sırât-ı Müstakîm'de (bu sırada Sebîlürreşâd adını almıştır) dokuz sayı tefrika edildikten sonra aynı yıl kitap olarak da çıkar. Birinci şahıs ağzından bir tahkiye olan eserin başında şair Galata Köprüsü'nden Yenicami'ye doğru gitmektedir.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page hidden" id="page-5-right">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <p>Haliç'in yosunlu suları ve bakımsız sokaklar birtakım nüktelerle anlatılırken yol üzerindeki Yenicami, daha sonra Süleymaniye Camii sanatkârane bir şekilde tasvir edilir. Caminin kürsüsünde yaşlı bir vâiz konuşmaktadır. Hikâyenin bundan sonrası, aslen Özbekistanlı olan bu vâizin dolaştığı Türk-İslâm dünyasında gördüklerini zaman zaman yorumlayarak anlattıklarıdır. Âkif'in, İslâm coğrafyasını ve kavimlerini dikkate alarak İslâm idealiyle (İslâmcılık) ilgili fikirlerini dile getiren ilk eseri olması bakımından Süleymaniye Kürsüsünde ayrı bir önem taşır.</p>
+                            <p>Ona göre İslâm toplumunun çöküşünün sebebi İslâm'ın aslî kaynaklarından uzaklaşılmasıdır. Kürsüde konuşan vâizin anlattıklarıyla, o yıllarda İstanbul'a gelen Özbekistanlı Abdürreşid İbrahim'in aynı dönemde yayımlanan Âlem-i İslâm ve Japonya'da İntişâr-ı İslâmiyyet adlı kitabında İslâm coğrafyası hakkında yazdıkları arasında paralellik bulunmaktadır. Bu bilgilerin dışında "İslâm'ı asrın idrakine söyletmek" için yapılan yorumlar doğrudan doğruya Âkif'e aittir. Vâizin konuşması bir dua ile sona erer.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page left-page hidden" id="page-6-left">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <h2>SAFAHAT (Devam)</h2>
+                            <p>Hakkın Sesleri adını taşıyan üçüncü kitap (İstanbul 1331) Balkan savaşları yıllarının acılarını dile getiren on şiirden oluşur. 1913 yılının Ocak-Mayıs aylarında Sebîlürreşâd'da çıkan ve kronolojik sırayla kitaba giren ilk dokuz manzumeden sekizi Kur'ân-ı Kerîm'den bazı âyetlerin, biri bir hadisin serbest yorumunu ihtiva eder. Sonuncu şiir "Pek Hazin Bir Mevlid Gecesi" başlıklı kısa bir manzumedir.</p>
+                            <p>Başlıkları olmayan şiirlerde âyet veya hadis metni ve tercümesinden sonra manzume metni gelmektedir. Gerek âyetlerin gerekse hadisin ortak meâlleri insanların kendi hataları sebebiyle uğradıkları musibetlerin etrafında toplanmaktadır. Mevlid gecesiyle ilgili şiir ise bu musibetlerden ibret alıp uyanmaya bir çağrı ve Hz. Peygamber'in ruhaniyetinden istimdat mânası taşımaktadır. Kitabın sonunda Âkif'in yakın dostlarından Ferit Kam'ın "Enîs-i Rûhum Âkif'e" hitabıyla sanata ve şiire dair bir çeşit takriz mahiyetindeki mektubu bulunmaktadır.</p>
+                            <p>Safahat'ın, adı ve mahiyeti bakımından ikinci kitapla benzerlik gösteren dördüncü kitabı Fâtih Kürsüsünde de (İstanbul 1332) tek ve uzun bir manzumeden oluşur. 1913-1914 yılları içinde Sebîlürreşâd'ın yirmi sekiz sayısında tefrika edilmiştir. Başlangıçta, Anadolu yakasından vapurla gelip Galata Köprüsü'ne inen iki arkadaş buradan yürüyerek Fatih'e gider.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page hidden" id="page-6-right">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <p>Yolda yine nükteli bir sohbet esnasında etrafta gördükleri şeyler hakkında bazan bunların getirdiği çağrışımlarla birtakım dinî, siyasî konularla dil ve edebiyat konularına girip II. Meşrutiyet hareketinden sonra ortaya çıkan bozuklukları eleştirirler. Nihayet Fâtih Camii'ne giren iki arkadaş kürsüdeki vâizi dinlemeye başlar. Vaazın konusu çalışma hakkındadır. Vâiz konuşmasının içinde bir laytmotif gibi, "Bekāyı hak tanıyan, sa'yi bir vazîfe bilir / Çalış, çalış ki bekā sa'y olursa hak edilir" mısralarını altı defa tekrar eder.</p>
+                            <p>Manzumenin bu beyitle birbirinden ayrılan parçalarının her birinde hilkatin, gezegen ve yıldızların, bulutların, maddenin en küçük parçalarının, yeryüzündeki varlıkların, kısaca bütün kâinatın devamlı hareket halinde olduğu söylenir. Eski İslâm medeniyetinden ve Batı'dan örnekler verilerek çalışmanın hak edilen semeresi ortaya konur. Doğu milletleri ve İslâm dünyası daldığı derin uykudan uyanmalı ve miskinlikten kurtulmalıdır.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page left-page hidden" id="page-7-left">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <h2>SAFAHAT (Son)</h2>
+                            <p>Böylece Âkif, Süleymaniye Kürsüsünde tasvir ettiği İslâm dünyasının perişanlığını onun tembelliğine, kurtuluşunu da çalışmasına bağlamaktadır. Ona göre ebedî hayatın varlığına inanıldığı kadar çalışmanın da insanlık görevi olduğuna inanmak gerekir. Bu kitap da vâizin bir duasıyla sona erer.</p>
+                            <p>Hakkın Sesleri ile paralellik gösteren beşinci kitap Hâtıralar başlığını taşır (İstanbul 1335). Manzumelerin çoğunun Sebîlürreşâd'daki neşir tarihleri 1913-1915 yılları arasıdır. Bazılarının altında Berlin'de kaleme alınmış olduğu kaydı bulunmaktadır. Kitaptaki on manzumeden dördü âyet, ikisi hadis meâllerinin serbest yorumudur. Bu defa Balkan savaşlarının yol açtığı facialara I. Dünya Savaşı acıları da eklenmiştir.</p>
+                            <p>Altı şiirin dışında kalan "Uyan" başlıklı manzume halkı meskenetten uyarmayı hedefler. Kitabın son üç şiiri Âkif'in 1914-1915 yıllarında gerçekleştirdiği üç seyahatin intibalarını taşır. Bunlardan "el-Uksûr'da" Mısır'a yaptığı ziyarette tarihî harabeler karşısındaki duygularını anlatır; uzun bir manzume olan "Berlin Hâtıraları"nda Teşkîlât-ı Mahsûsa'nın verdiği görevle gittiği Berlin'de çeşitli yönleriyle Doğu'yu ve Batı'yı karşılaştırır.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="page right-page hidden" id="page-7-right">
+                    <div class="page-content">
+                        <div class="safahat-content">
+                            <p>Şiirin dokuzuncu bölümü "Târîh-i Kadîm" sebebiyle Tevfik Fikret ve arkadaşlarının tenkidi için kaleme alınmıştır. Kitaba ikinci baskısında giren (1918) sonuncu şiir "Necid Çöllerinden Medine'ye" ise şairin aynı teşkilâtın verdiği görevle gittiği Necid'den Medine'ye kadar olan yolculuğunu ve Hz. Peygamber'in kabrini ziyaretinde yaşadığı duygularını dile getiren en lirik şiirlerindendir.</p>
+                            <p>Safahat'ın altıncı kitabı Âsım (İstanbul 1342) Âkif'in yazılışı ile basılması arasındaki sürenin en uzun olduğu eseridir. Âsım'ın ilk parçaları Sebîlürreşâd'da 1919 Eylülünde çıkmaya başlamış, araya Mehmed Âkif'in Millî Mücadele'ye katılmak üzere Anadolu'ya geçişi ve faaliyetleri girmiş, bu sebeple dergide sadece bir kısmı uzun aralıklarla çıkabilmiştir.</p>
+                            <p>Mehmed Âkif'in Mısır'da yaşadığı sırada Kahire'de yayımlanan Safahat'ın son kitabı Gölgeler'dir (Kahire 1352). On yedisi kıta olmak üzere kitapta yer alan kırk bir şiirden en eskisi 4 Temmuz 1334 (1918) tarihini taşırken Âkif'in sağlığında basılmış son şiiri de 22 Ağustos 1349 (1933) tarihli "Sanatkâr" başlıklı manzumedir.</p>
+                            <p>Gölgeler'de 1918-1921 tarihlerini taşıyanların çoğu,
+özellikle bunlar arasında yine âyetlerin serbest yorumları olan "Hâlâ mı Boğuşmak", "Yeis Yok" ve
+"Azimden Sonra Tevekkül" manzumeleri öncekiler gibi irade, ümit ve gayret temaları üzerine
+kurulmuşken diğerleri genellikle şairin Mısır'daki bir çeşit sürgün hayatını ve bedbinliklerini yansıtır.
+Beklediği İslâm idealinin gerçekleşmemesinin verdiği ümitsizlikle vatanından uzak yaşamaya mecbur
+bir ruh halinin doğurduğu karamsarlık "Hüsran", "Şark", "Umar mıydın?", "Mehmed Ali'ye",
+"Bülbül", "Leylâ", "Firavun ile Yüzyüze", "Vahdet" şiirlerinde açıkça hissedilir. Gölgeler'e asıl
+özelliğini veren ise hayatında ve eserinde tasavvufa meyletmemiş olduğu bilinen şairin dinî fikirlerinin
+mistik duygulara yöneldiği "Gece", "Hicran" ve "Secde" şiirleridir. Altlarındaki kayıtlara göre ikamet
+etmekte olduğu Hilvan'da bir duygu yoğunluğuyla yazıldığı anlaşılan şiirler Âkif'in en lirik
+parçalarındandır. Bunlara yine benzer ruh halini yansıtan "Said Paşa İmamı" ve "Hüsam Efendi Hoca"
+manzum hikâyeleri de eklenebilir. "Sanatkâr" başlıklı şiiri ise Âkif'in Müslümanların dertleri ve hayal
+kırıklıkları ile geçen hayatının kısa, duygulu bir özeti olduğu gibi Safahat'ın önceki ciltlerinde
+belirmeyen, fakat şahsiyetinin önemli bir tarafını teşkil eden sanat sevgisini, özellikle de Batı
+mûsikisine olan ilgisini aksettirir.</p>
+
+<p>Safahat'ın her kitabı ayrı ayrı olmak üzere Mehmed Âkif hayatta iken birkaç defa basılmış,
+ölümünden sonra ve özellikle vefatının 50. yılından itibaren pek çok yayınevi, resmî ve özel kuruluşça
+bugüne kadar yedi kitap bir arada olarak bazıları inceleme de ihtiva etmek suretiyle 100'den fazla
+baskısı yapılmış, böylece Safahat Türkiye'de en çok tiraja ulaşan şiir kitaplarından biri olmuştur. Bu
+basımlar arasında Âkif'in Safahat'a almadığı şiirleriyle beraber (Safahat, İstanbul 1987), bütün
+şiirlerin ilk yayın tarihleri, dergide ve çeşitli basımlarındaki karşılaştırmaları, özel adlar fihristi
+(Safahat: Edisyon Kritik, Ankara 1990) ve eski-yeni harflerle tenkitli neşir (Safahat, İstanbul 1991)
+olmak üzere önemli birkaç yayın M. Ertuğrul Düzdağ tarafından gerçekleştirilmiştir. Ayrıca İsmail
+Hakkı Şengüler'in on ciltlik Açıklamalı ve Lügatçeli Mehmed Âkif Külliyatı'nın (İstanbul 1990-1992)
+I-IV. ciltleri Safahat'a ayrılmıştır.1
+</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="nav-arrow" id="next-page">&#10095;</button>
+        </div>
+    </section>
+
+    <script>
+        console.log(" JavaScript çalışıyor!");
+
+        let currentPage = 1;
+        const totalPages = 7;
+
+        document.getElementById("start-btn").addEventListener("click", function() {
+            console.log("🎯 Başla butonuna tıklandı!");
+            const bookSection = document.getElementById("book");
+            const coverSection = document.getElementById("cover");
+            const searchContainer = document.getElementById("search-container");
+
+            coverSection.style.transition = "all 1s ease-in-out";
+            coverSection.style.opacity = "0";
+            coverSection.style.transform = "translateY(-50px)";
+            
+ 
+            setTimeout(function() {
+                bookSection.style.display = 'block';
+                setTimeout(function() {
+                    bookSection.classList.add('show');
+                }, 100);
+                
+            
+                setTimeout(function() {
+                    searchContainer.classList.add('show');
+                }, 800);
+                
+              
+                bookSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 600);
+        });
+
+       
+        function goToPage(pageNumber) {
+            console.log(`Sayfa ${pageNumber}'a geçiliyor...`);
+            
+         
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                page.classList.add('hidden');
+            });
+            
+        
+            document.getElementById(`page-${pageNumber}-left`).classList.remove('hidden');
+            document.getElementById(`page-${pageNumber}-left`).classList.add('active');
+            document.getElementById(`page-${pageNumber}-right`).classList.remove('hidden');
+            document.getElementById(`page-${pageNumber}-right`).classList.add('active');
+            
+            currentPage = pageNumber;
+            updateNavigation();
+        }
+
+    
+        document.getElementById("next-page").addEventListener("click", function() {
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        });
+        
+        document.getElementById("prev-page").addEventListener("click", function() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        });
+        
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            
+            if (prevBtn) {
+                prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
+                prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+            }
+            
+            if (nextBtn) {
+                nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
+                nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+            }
+        }
+        
+     
+        updateNavigation();
+        
+        
+    console.log(" Uygulama hazır!");
+
+
+    const toDictionaryBtn = document.createElement('button');
+    toDictionaryBtn.id = 'to-dictionary-btn';
+    toDictionaryBtn.textContent = 'Sözlüğe Geç';
+    toDictionaryBtn.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #c59d5f;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    `;
+    document.body.appendChild(toDictionaryBtn);
+
+
+    const dictionarySection = document.createElement('section');
+    dictionarySection.id = 'dictionary';
+    dictionarySection.innerHTML = `
+        <div class="dictionary-container">
+            <div class="dictionary-header">
+                <h2>Safahat Sözlüğü</h2>
+                <p>Kelime ve anlamlarına göz atın</p>
+            </div>
+            <div class="letter-menu">
+                <button class="letter-btn" data-letter="A">A</button>
+                <button class="letter-btn" data-letter="B">B</button>
+                <button class="letter-btn" data-letter="C">C</button>
+                <button class="letter-btn" data-letter="Ç">Ç</button>
+                <button class="letter-btn" data-letter="D">D</button>
+                <button class="letter-btn" data-letter="E">E</button>
+                <button class="letter-btn" data-letter="F">F</button>
+                <button class="letter-btn" data-letter="G">G</button>
+                <button class="letter-btn" data-letter="H">H</button>
+                <button class="letter-btn" data-letter="I">I</button>
+                <button class="letter-btn" data-letter="İ">İ</button>
+                <button class="letter-btn" data-letter="K">K</button>
+                <button class="letter-btn" data-letter="L">L</button>
+                <button class="letter-btn" data-letter="M">M</button>
+                <button class="letter-btn" data-letter="N">N</button>
+                
+                
+                <button class="letter-btn" data-letter="P">P</button>
+                <button class="letter-btn" data-letter="R">R</button>
+                <button class="letter-btn" data-letter="S">S</button>
+                <button class="letter-btn" data-letter="Ş">Ş</button>
+                <button class="letter-btn" data-letter="T">T</button>
+                <button class="letter-btn" data-letter="U">U</button>
+                
+                <button class="letter-btn" data-letter="V">V</button>
+                <button class="letter-btn" data-letter="Y">Y</button>
+                <button class="letter-btn" data-letter="Z">Z</button>
+            </div>
+            <div id="word-content">
+                <!-- Kelimeler burada gösterilecek -->
+            </div>
+        </div>
+    `;
+    document.body.appendChild(dictionarySection);
+
+ 
+    const style = document.createElement('style');
+    style.textContent = `
+        #dictionary {
+            padding: 3rem 1rem;
+            min-height: 100vh;
+            background: #f4efe6;
+            display: none;
+        }
+        #dictionary.show {
+            display: block;
+        }
+        .dictionary-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .dictionary-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .dictionary-header h2 {
+            font-size: 2.5rem;
+            color: #8b4513;
+            margin-bottom: 1rem;
+        }
+        .letter-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        .letter-btn {
+            background: #c59d5f;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .letter-btn:hover {
+            background: #b1823e;
+            transform: scale(1.1);
+        }
+        .word-card {
+            background: #fffaf0;
+            border: 1px solid #d8b989;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .word-title {
+            font-size: 1.3rem;
+            color: #8b4513;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .word-meaning {
+            color: #5c4033;
+            line-height: 1.6;
+        }
+        #to-dictionary-btn:hover {
+            background: #b1823e;
+            transform: scale(1.05);
+        }
+    `;
+    document.head.appendChild(style);
+
+
+    const dictionaryData = {
+        'A': [
+            {word: 'Ahenk', meaning: 'Uyum, düzen, düzgünlük.'},
+            {word: 'Akide', meaning: 'İnanç, iman, dinin temel prensipleri.'},
+            {word: 'Amel', meaning: 'İş, eylem, davranış.'}
+        ],
+        'B': [
+            {word: 'Beyan', meaning: 'Açıklama, ifade etme.'},
+            {word: 'Bürhan', meaning: 'Kanıt, delil.'}
+        ],
+        'C': [
+            {word: 'Cenap', meaning: 'Saygıdeğer, yüce kişi.'}
+        ]
+     
+    };
+
+   
+    toDictionaryBtn.addEventListener('click', function() {
+        document.getElementById('book').style.display = 'none';
+        document.getElementById('dictionary').classList.add('show');
+        dictionarySection.scrollIntoView({behavior: 'smooth'});
+    });
+
+   
+    document.querySelectorAll('.letter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const letter = this.dataset.letter;
+            showWords(letter);
+        });
+    });
+
+  
+        function showWords(letter) {
+        const wordContent = document.getElementById('word-content');
+        const words = dictionaryData[letter] || [];
+        
+        wordContent.innerHTML = '';
+        
+        if (words.length === 0) {
+            wordContent.innerHTML = '<p style="text-align: center; color: #666;">Bu harf için henüz kelime eklenmemiş.</p>';
+            return;
+        }
+        
+        words.forEach(item => {
+            const wordCard = document.createElement('div');
+            wordCard.className = 'word-card';
+            wordCard.innerHTML = `
+                <div class="word-title">${item.word}</div>
+                <div class="word-meaning">${item.meaning}</div>
+            `;
+            wordContent.appendChild(wordCard);
+        });
+    }
+
+
+    dictionaryData['A'] = [
+        {word: 'Âbâ', meaning: '1. atalar, babalar, pederler 2. yünden yapılmış kaba kumaş, ekseriyatle yünden yapılmış, bol giyimli bir libas, elbise.'},
+        {word: 'Âbânî', meaning: 'ipekten, sarıya çalar bir renkte dallı nakışlarla işlenmiş bir tür beyaz kumaş.'},
+        {word: 'Abes', meaning: 'boş, anlamsız, gayesiz, saçma.'},
+        {word: 'Ab-ı rûy', meaning: 'yüzsuyu, şeref, haysiyet, namus.'},
+        {word: 'A\'dâd', meaning: 'adetler, sayılar.'},
+        {word: 'Adale', meaning: 'kas, kaslar.'},
+        {word: 'Adem', meaning: 'yokluk, hiçlik, olmama, bulunmama.'},
+        {word: 'Adû', meaning: 'düşman.'},
+        {word: 'Afâk', meaning: 'ufuklar, dış alemler; taraflar, yönler.'},
+        {word: 'Ağniyâ', meaning: 'zenginler, ganiler.'},
+        {word: 'Âğûş', meaning: 'kucak, sığınılacak yer.'},
+        {word: 'Ağyâr', meaning: 'başkaları, yabancılar, düşmanlar, rakipler.'},
+        {word: 'Âhâd', meaning: 'birler, birden dokuza kadar olan sayılar.'},
+        {word: 'Ahcâr', meaning: 'taşlar.'},
+        {word: 'Ahenîn', meaning: 'demirden, demir gibi; çok kuvvetli, pek sağlam.'},
+        {word: 'Aheste', meaning: 'yavaş, ağır, usul.'},
+        {word: 'Ahfâd', meaning: 'torunlar, hafidler.'},
+        {word: 'Ahiren', meaning: 'sonradan. Son olarak, geçenlerde, son zamanlarda.'},
+        {word: 'Ahlâf', meaning: 'gelecek nesiller.'},
+        {word: 'Ahlât', meaning: 'karıştırılmaya elverişli, çok karıştırılabilir; salgılar.'},
+        {word: 'Ahrâr', meaning: 'hür kişiler, özgürler, esir ve köle olmayanlar.'},
+        {word: 'Ahyâ', meaning: 'diriler, canlılar.'},
+        {word: 'Akabât', meaning: '1. Korkunç durumlar, tehlikeli anlar. 2. Tehlikeli geçitler, sarp yollar.'},
+        {word: 'Akdâh', meaning: 'kadehler.'},
+        {word: 'Akdes', meaning: 'en mukaddes, en mübarek, en kutsal.'},
+        {word: 'Âkil', meaning: 'yiyen, yiyici.'},
+        {word: 'Akîm', meaning: 'neticesiz, beyhude, sonuçsuz; kısır, verimsiz.'},
+        {word: 'Aksâ', meaning: 'en son, uzak, en uzak.'},
+        {word: 'Aktâr', meaning: '1. Her taraf, her yer, taraflar, yöreler 2. güzel kokular taciri, baharatçı. 3. eczacı, ilaç satan adam. 4. Çaplar, dairenin merkezinden geçen doğru hatlar.'},
+        {word: 'Akvâl', meaning: 'sözler, kaviller, konuşmalar.'},
+        {word: 'Akvâm', meaning: 'kavimler, ırklar, milletler.'},
+        {word: 'Âlâm', meaning: 'elemler, kederler, acılar, üzüntüler.'},
+        {word: 'Amâde', meaning: 'hazır, hazırlanmış.'},
+        {word: 'A\'mâk', meaning: 'derinlikler.'},
+        {word: 'Amâl', meaning: 'ameller, işler; emeller, arzular, istekler.'},
+        {word: 'Amel-mânde', meaning: 'iş göremez durumda olan.'},
+        {word: 'Âmennâ', meaning: 'inandık, iman ettik.'},
+        {word: 'Amîk', meaning: 'derin.'},
+        {word: 'Amûd', meaning: 'sütun, direk.'},
+        {word: 'An-karib', meaning: 'yakından, en kısa zamanda, çok zaman geçmeden.'},
+        {word: 'Ananât', meaning: 'ananeler, gelenekler.'},
+        {word: 'Anâsır', meaning: 'unsurlar, elementler, elemanlar.'},
+        {word: 'Ârâ', meaning: '1. Oylar, reyler, fikirler. 2. süsleyen, bezeyen. 3. mıntıka, bölge, komşuluk. 4. avlu 5. çıplaklık.'},
+        {word: 'Arâkiyye', meaning: 'dervişlerin giydikleri yünden yapılmış bir çeşit külah; ter çeken başlık, terlik.'},
+        {word: 'Ârâm', meaning: '1. Durma, dinlenme, sükun, karar 2. Rahat, huzur, istirahat.'},
+        {word: 'Aramgâh', meaning: 'dinlenme yeri, mezar.'},
+        {word: 'Arsenik', meaning: 'bir tür element.'},
+        {word: 'Arz', meaning: '1. toprak, yeryüzü, dünya, zemin. 2. memleket, ülke. 3. genişlik, en. 4. sunma, arz etme.'},
+        {word: 'Âsâr', meaning: 'eserler, izler, nişanlar.'},
+        {word: 'Asûd', meaning: 'arslanlar, yiğitler.'},
+        {word: 'Âsüman', meaning: 'gökyüzü, sema, felek, gök kubbe.'},
+        {word: 'Âşinâ', meaning: 'bildik, tanıdık; bilen, tanıyan.'},
+        {word: 'Aşiyân', meaning: 'yuva, ev, mesken, ikametgâh, kuş yuvası.'},
+        {word: 'Aşûb', meaning: 'kargaşa, karıştırıcı, karıştıran.'},
+        {word: 'Ateh', meaning: 'bunama, bunaklık.'},
+        {word: 'Âti', meaning: 'gelecek, ilerideki, aşağıdaki; inatçı, kalın kafalı, sert başlı.'},
+        {word: 'Attâr', meaning: 'baharatçı, aktar, güzel koku satan adam.'},
+        {word: 'Avâlim', meaning: 'alemler, dünyalar, cihanlar.'},
+        {word: 'Âyât', meaning: 'ayetler, menziller, mekânlar.'},
+        {word: 'Ayyuk', meaning: '1. gökyüzünün pek yüksek yeri. 2. samanyolunun daima sağ tarafında olan çok parlak ve uzak bir yıldız.'},
+               {word: 'Âzâde', meaning: 'hür, özgür, serbest, bağlardan kurtulmuş.'}
+    ];
+
+ 
+    dictionaryData['B'] = [
+        {word: 'Ba\'s', meaning: '1. Dirilme, diriltme, diriliş, ihya 2. gönderme, gönderilme, yollama.'},
+        {word: 'Bâb', meaning: '1. Kapı, bölüm, kısım, fasıl; mevzu, konu. 2. bektaşi şeyhi, manevi rehber, şeyh. 3. hayır, uğur; ata, ecdad. 4. layık, uygun, elverişli, münasip.'},
+        {word: 'Bâd', meaning: '1. rüzgâr, yel; soluk, nefes 2. defa, kez; yük, olsun.'},
+        {word: 'Bâde', meaning: 'şarap, içki; kadeh.'},
+        {word: 'Bâdî', meaning: '1. sebep, sebep olan, yol açan; halk eden, hâlık, yaratan. 2. geçici, havaya veya rüzgâra ait, zahir ve aşikâr olan.'},
+        {word: 'Badîye', meaning: 'çöl, sahra; kır, ova.'},
+        {word: 'Bâh', meaning: 'şehvet, cinsel güç.'},
+        {word: 'Bahr', meaning: '1. deniz, büyük göl veya nehir. 2. âlim, çok bilen, iyi kimse. 3. yarmak, yırtmak; çok yürüyen at, deve hastalığı.'},
+        {word: 'Bahr-i ahmer', meaning: 'kızıldeniz.'},
+        {word: 'Bahs-i dûradûr', meaning: 'uzayıp giden mevzu.'},
+        {word: 'Bâlâ', meaning: 'üst, yukarı, yüksek, yüce.'},
+        {word: 'Bâr', meaning: '1. yük, zahmet, eziyet, ağırlık. 2. yemiş, meyve. 3. yağdıran, serpen, döken. 4. defa, kez, kere; izin, kale duvarı; allah.'},
+        {word: 'Bârân', meaning: 'yağmur, rahmet.'},
+        {word: 'Bargâh', meaning: 'yüksek huzur, padişah huzuru, otağ, padişah divanhanesi; dua edilen yer.'},
+        {word: 'Bârû', meaning: 'sur, kale duvarı, burç, hisar burcu, sığınak.'},
+        {word: 'Ba\'sü ba\'de\'l-mevt', meaning: 'ölümden sonra diriliş.'},
+        {word: 'Bâzîçe', meaning: 'oyuncak, eğlence.'},
+        {word: 'Bedâyi', meaning: 'eşi benzeri olmayan güzellikler.'},
+        {word: 'Bedi\'', meaning: 'güzel, eşsiz güzel, benzersiz, beğenilen, yepyeni, eşi ve benzeri olmayan.'},
+        {word: 'Bedî', meaning: 'benzersiz güzel, üstün, özgün.'},
+        {word: 'Bedîhî', meaning: 'ispat gerektirmeyecek kadar açık, apaçık, aşikâr, kuşkusuz.'},
+        {word: 'Bedreka', meaning: 'kılavuz, uğurlama, yolcu etme.'},
+        {word: 'Behâim', meaning: 'hayvanlar, Suriye\'de bir sıradağ.'},
+        {word: 'Behîmî', meaning: 'hayvanca, hayvani, hayvana yakışır tarzda, hayvanlık.'},
+        {word: 'Beht', meaning: 'şaşkınlık, hayranlık; yalan söylemek, ansızın bir şeyi almak.'},
+        {word: 'Bekâ', meaning: 'kalıcılık, devamlılık, ebedilik, ölmezlik.'},
+        {word: 'Beliyyât', meaning: 'belalar, gamlar, felaketler, kederler, sıkıntılar.'},
+        {word: 'Benân', meaning: 'parmaklar, parmak uçları.'},
+        {word: 'Benât', meaning: 'kızlar, bebekers.'},
+        {word: 'Bendegân', meaning: 'padişahın hizmetindekiler, kullar, hizmetliler, köleler.'},
+        {word: 'Ber', meaning: '1. Üzere, üzerine, yukarı. 2. göğüs, sine, bağır, sadır. 3. yan, taraf; yaprak, varak; nakil, götürücü; meyve.'},
+        {word: 'Berâhîn', meaning: 'deliller, kanıtlar, şahitler.'},
+        {word: 'Berceste', meaning: '1. Seçkin, seçme, sağlam ve latif. 2. zahmetsizce hatıra geliveren ve çok kıymetli olan söz, iyi mısra.'},
+        {word: 'Berdâr', meaning: 'asılmış, yukarı kaldırılmış; tutucu, itaat ettirici; meyveli, meyve verici olan.'},
+        {word: 'Berf', meaning: 'kar.'},
+        {word: 'Berhâne', meaning: 'eskiyip harap olmuş konak, ev.'},
+        {word: 'Berhudâr', meaning: 'mutlu, saadete erişen, selamette.'},
+        {word: 'Berîn', meaning: '1. çok yüksek, en yüce, yüksek, yüce 2. yarık, yırtık, delik.'},
+        {word: 'Berk', meaning: '1. katı, sert, sağlam. 2. şimşek, yıldırım, parıltı, kıvılcım, şimşek çakması, parlama. 3. zinetlenme, süslenme. 4. göğüs, sadır; yaprak.'},
+        {word: 'Berk-i nigâh', meaning: 'şimşek (gibi) bakış.'},
+        {word: 'Bermu\'tâd', meaning: 'alışıldığı üzere, her zamanki gibi.'},
+        {word: 'Bernâme', meaning: 'mektup başlığı, zarfın üzerindeki adres.'},
+        {word: 'Berzede', meaning: 'biriktirilmiş, toplanılmış, bir araya getirilmiş.'},
+        {word: 'Besîm', meaning: 'güleryüz\'ü, güleç.'},
+        {word: 'Beşâret', meaning: 'müjde, muştu, iyi haber, müjdeleme.'},
+        {word: 'Beşuş', meaning: 'güleryüzlü, şen.'},
+        {word: 'Bevad', meaning: 'mahvolma, yok olma.'},
+        {word: 'Beyâbân', meaning: 'çöl, sahra, kır.'},
+        {word: 'Beyyinât', meaning: 'deliller, mucizeli açık ayetler, açık ve belli şeyler.'},
+        {word: 'Beyzâ', meaning: '1. beyaz, bembeyaz, parlak; yumurta. 2. afet, bela, musibet. 3. demir başlık, demirden savaşçı başlığı.'},
+        {word: 'Bezl', meaning: 'cömertçe vermek, bol bol vermek, esirgemeden vermek.'},
+        {word: 'Bezm', meaning: '1. sohbet meclisi, eğlence meclisi, içki meclisi, muhabbet yer 2. Yayın kirişini çekip sonra salıverme. 3. bir şeyi diş ucuyla ısırma.'},
+        {word: 'Bî-aram', meaning: 'durup dinlenmeme.'},
+        {word: 'Bîdâr', meaning: 'uyanık, uykusuz, uyumayan.'},
+        {word: 'Bidâyet', meaning: 'başlangıç, başlama; ilk önce, ilk olarak.'},
+        {word: 'Bîhûş (et-)', meaning: 'aklını başından almak.'},
+        {word: 'Bîhûş', meaning: 'akılsız, şaşkın, sersem.'},
+        {word: 'Bi-insaf', meaning: 'insafsız, acımasız.'},
+        {word: 'Bîkes', meaning: 'kimsesiz.'},
+        {word: 'Bilfarz', meaning: 'farz edelim ki, diyelim ki, varsaymakla, olduğunu kabul ederek.'},
+        {word: 'Bimâr', meaning: 'hasta.'},
+        {word: 'Bî-meâl', meaning: 'anlamsız, manasız.'},
+        {word: 'Bîn', meaning: 'gören anlamında son ek.'},
+        {word: 'Bina', meaning: 'göz, gören, görücü; ev, yapı, bina etme, dayandırma.'}
+    ];
+
+  
+    dictionaryData['C'] = [
+        {word: 'Cahim', meaning: 'cehennem, cehennemin dördüncü tabakası.'},
+        {word: 'Cahîmî', meaning: 'cehennem gibi.'},
+        {word: 'Câmedân', meaning: 'gardrop.'},
+        {word: 'Câmid', meaning: 'cansız, donmuş, donuk, hareketsiz, ruhsuz.'},
+        {word: 'Câri', meaning: 'akan, akıcı geçerli, yürürlükte, yürüyen.'},
+        {word: 'Câvidân', meaning: 'ebedi, sonsuz, kalıcı.'},
+        {word: 'Cây', meaning: 'yer, makam, mevki; değer, layık.'},
+        {word: 'Cebânet', meaning: 'korkaklık, ürkeklik.'},
+        {word: 'Ceberut', meaning: 'azamet, büyüklük, hakimlik; baskı, zorlama.'},
+        {word: 'Cebin', meaning: '1. Alın. 2. Korkak, cesaretsiz, yüreksiz.'},
+        {word: 'Cebin-i sîmîn', meaning: 'gümüşe benzer alın, gümüş gibi alın.'},
+        {word: 'Cebri', meaning: 'zoraki, zorla, zorunlu olarak.'},
+        {word: 'Ced', meaning: 'ata, dede.'},
+        {word: 'Cedel-gâh', meaning: 'mücadele yeri, dünya.'},
+        {word: 'Cefa-dide', meaning: 'cefa görmüş, cefa çekmiş.'},
+        {word: 'Celâdet', meaning: 'yiğitlik, kahramanlık, bahadırlık.'},
+        {word: 'Celî', meaning: 'belli, açık, aşikar, meydanda, parlak.'},
+        {word: 'Cenâh', meaning: 'kanat, taraf, yan, yön, kısım; kol, pazu.'},
+        {word: 'Cenub', meaning: 'güney.'},
+        {word: 'Cerh', meaning: 'yaralama, yaralatma, çürütme, yara.'},
+        {word: 'Ceride', meaning: 'gazete, tutanak; yalnız, tenha.'},
+        {word: 'Ceriha', meaning: 'yara.'},
+        {word: 'Cevâmî', meaning: 'toplayıcı olan şeyler.'},
+        {word: 'Cevelan', meaning: 'dolaşma, gezme, gezinti.'},
+        {word: 'Cevelan-gâh', meaning: 'dolaşma yeri, gezinme yeri, gezip dolaşılan yer.'},
+        {word: 'Cevf', meaning: 'iç, iç kısım, oyuk, çukur, boşluk; orta, yarı.'},
+        {word: 'Cevv', meaning: 'hava boşluğu, gök, yer ile gök arası, gök boşluğu.'},
+        {word: 'Ceyb', meaning: 'cep, yaka.'},
+        {word: 'Cibah', meaning: 'cepheler, alınlar.'},
+        {word: 'Cibal', meaning: 'dağlar.'},
+        {word: 'Cibal-i velveledâr', meaning: 'sesli dağlar, gürültülü dağlar.'},
+        {word: 'Cibilli', meaning: 'yaratılıştan, mayadan, soydan; huy, tabiat.'},
+        {word: 'Cidâl', meaning: 'mücadele, kavga, çekişme, cenk, muharebe, savaş.'},
+        {word: 'Cidâr', meaning: 'duvar.'},
+        {word: 'Cife', meaning: 'leş, ölü hayvan, kokmuş et.'},
+        {word: 'Cihâz', meaning: 'çeyiz, alet, edevat, aygıt, sistem; organ, duyu.'},
+        {word: 'Cud', meaning: 'cömertlik, eli açık olmak.'},
+        {word: 'Cuş', meaning: 'coşma, kaynama.'},
+        {word: 'Cushiş', meaning: 'coşkunluk, coşma, coşku.'},
+        {word: 'Cuy', meaning: 'akarsu, ırmak, çay; arayan, arama.'},
+        {word: 'Cuybar', meaning: 'akarsu, ırmak, nehir, dere, çay.'},
+        {word: 'Cüdâ', meaning: 'uzak kalmak, ayrı düşmek, ayrı, ayrılmış, ayrılık.'},
+        {word: 'Cündi', meaning: 'sipahi, süvari, usta binici, ata iyi binen.'},
+        {word: 'Cünun', meaning: 'delilik, cinnet, delirmek.'},
+        {word: 'Cür\'a', meaning: 'bir yudumluk su, içim, yudum.'}
+    ];
+
+
+    dictionaryData['Ç'] = [
+        {word: 'Çâk', meaning: '1. yırtmak, yırtık, çatlak, yarık, yırtmaç. 2. iyi, güzel, sıhhatli, şişman.'},
+        {word: 'Çakşır', meaning: '1. ince kumaştan yapılan uzun bir çeşit şalvar. 2. Kuşların ayağındaki tüy.'},
+        {word: 'Çalâk', meaning: 'çevik, atik, kıvrak, yerinde duramayan, çabuk.'},
+        {word: 'Çerâğ', meaning: 'kandil, lamba, mum, çıra.'},
+                {word: 'Çin', meaning: 'kıvrım, kırışık, büklüm, buruşukluk.'}
+    ];
+
+
+    dictionaryData['D'] = [
+        {word: 'Dalkavuk', meaning: 'çıkar ve yarar beklediği ya da kendisinden çıkar sağladığı kimselere makam ve durumca büyüklere karşı saygı ve hayranlık göstererek yaranmak isteyen kimse'},
+        {word: 'Damǎn', meaning: 'bir şeyi üstlenme, taahhüt ve garanti etme'},
+        {word: 'Dani', meaning: 'kişiler nezdinde doğacak zararlardan sorumlu olacağını, hakkında hukuki ve cezai işlem yapılacağını peşinen kabul eden kimse. Hor, zelil.'},
+        {word: 'Dar ü divar', meaning: 'yer, ülke, mekân.'},
+        {word: 'Daraban', meaning: 'vurma, vuruş, çarpış, çarpıntı.'},
+        {word: 'Daye', meaning: 'çocuk hizmetçisi, çocuğa süt veren dadı, mürebbi, süt anne, çocuk bakıcısı.'},
+        {word: 'Dehen', meaning: 'ağız'},
+        {word: 'Dehhaşe', meaning: 'çok korkunç, dehşetli'},
+        {word: 'Dehr', meaning: 'dünya, devir, çağ, çok uzun zaman.'},
+        {word: 'Dehşet', meaning: 'bir tehlike ya da korkunç bir şey karşısında duyumsanan ürküntü, büyük korku'},
+        {word: 'Delâlet', meaning: 'deliller, kanıtlar'},
+        {word: 'Dem', meaning: 'kan, soluk, ağız, nazar, an, vakit, saat.'},
+        {word: 'Demâdem', meaning: 'zaman zaman, her vakit, daima, her an.'},
+        {word: 'Deni', meaning: 'dünyaya ait, fani ve geçici.'},
+        {word: 'Dereke', meaning: 'seviye, aşağı derece, gitgide alçalan durumların her biri.'},
+        {word: 'Derun', meaning: 'içyüz, iç taraf, kalp, gönül'},
+        {word: 'Derya', meaning: 'deniz'},
+        {word: 'Dest', meaning: 'el, (çoğulu: düşüt) dört bucaklı yastık ve elbise.'},
+        {word: 'Destâr', meaning: 'sikkeye sarılan sargı, mevlevilikte sarık'},
+        {word: 'Destar', meaning: 'eskimiş sarık, halk ağzında örtü'},
+        {word: 'Desti', meaning: 'testi.'},
+        {word: 'Deva', meaning: 'hastalığı iyileştirici nesne, ilaç; çözüm, çare'},
+        {word: 'Devahi', meaning: 'felaketler, büyük afetler, kazalar, üstün zekalılar.'},
+        {word: 'Devair', meaning: 'daireler'},
+        {word: 'Deverân', meaning: 'dolaşma, dönme, dolaşım'},
+        {word: 'Devr-i istibdad', meaning: 'baskı dönemi'},
+        {word: 'Devr-i istila', meaning: 'istila zamanı'},
+        {word: 'Deyyar', meaning: 'manastır sahibi, biri, bir kimse, fert'},
+        {word: 'Didar', meaning: 'yüz, çehre, göz, görüş kuvveti'},
+        {word: 'Dide', meaning: 'göz/görmüş, görülmüş'},
+        {word: 'Didinmek', meaning: 'hiç durmadan, kendini yıpratırcasına çalışmak, çalışıp çabalamak'},
+        {word: 'Dil-hah', meaning: 'gönlün isteği, arzusu'},
+        {word: 'Dilber', meaning: 'gönül alan güzel sevgili'},
+        {word: 'Dil-nişin', meaning: 'gönülde yer tutan. Latif hoş.'},
+        {word: 'Dimağ', meaning: 'akıl, beyin'},
+        {word: 'Din-i fıtri', meaning: 'insanın tabiatına uygun din, islam'},
+        {word: 'Din-i mubin', meaning: 'islam dini'},
+        {word: 'Duhât', meaning: 'zekiler, dâhiler'},
+        {word: 'Dur', meaning: 'uzak kalmak'},
+        {word: 'Dümbelek', meaning: 'ağzında deri gerilmiş dipsiz bir çömlek biçiminden darbukaya benzeyen, alaturka müzikte tempo tutmaya yarayan el ile vurularak çalınan bir tür çalgı'},
+        {word: 'Düra dür', meaning: 'uzun uzadıya, uzaktan uzağa; durmaksızın'},
+        {word: 'Dürdane-i ismet', meaning: 'temizlik incesi'},
+        {word: 'Düstur', meaning: 'genel kural, nizam.'},
+        {word: 'Düşun', meaning: 'dış evrenin kişinin zihninde yansıması'}
+    ];
+
+
+    dictionaryData['E'] = [
+        {word: 'Eb\'ad', meaning: 'çok uzak'},
+        {word: 'Ebkem', meaning: 'dilsiz'},
+        {word: 'Ecdat', meaning: 'geçmişteki büyükler, atalar ve dedeler'},
+        {word: 'Ecir', meaning: 'bir işi yapmak için kendi kuvvetini veya san\'atını kirâya veren, çalışan kimse, işçi.'},
+        {word: 'Ecnam', meaning: 'son, işin sonu mecaz: gelecek'},
+        {word: 'Ecza', meaning: 'tek parça, kısım, birimler, unsurlar.'},
+        {word: 'Edvar', meaning: 'devirler, dönemler'},
+        {word: 'Efkan', meaning: 'bağırıp çağıran'},
+        {word: 'Efkâr', meaning: 'fikirler, kaygı, tasa, üzüntü ve sıkıntı'},
+        {word: 'Eflaka', meaning: 'göklere'},
+        {word: 'Efrâd', meaning: 'fertler, bireyler ve şahıslar'},
+        {word: 'Ekseriyyet', meaning: 'çoğunluk, çokluk'},
+        {word: 'Ekvan', meaning: 'varlıklar'},
+        {word: 'Elhasıl', meaning: 'sonuç olarak'},
+        {word: 'Elim izmihlal', meaning: 'acı yok oluş'},
+        {word: 'Elvah', meaning: 'levhalar, portler, tablolar'},
+        {word: 'Elzem', meaning: 'gerekli'},
+        {word: 'Emel', meaning: 'gönülde yaşatılan ve gelecekte gerçekleşmesi istenen şey, istek, arzu.'},
+        {word: 'Emin tarık', meaning: 'güvenilir yol'},
+        {word: 'Emvac-ı berfu baran', meaning: 'yağmur ve kar dalgaları'},
+        {word: 'Emvac', meaning: 'dalgalar'},
+        {word: 'Emvat', meaning: 'ölüler'},
+        {word: 'Enbiye', meaning: 'nebiler, peygamberler'},
+        {word: 'Encüm', meaning: 'yıldızlar'},
+        {word: 'Encümen', meaning: 'cemiyet, meclis'},
+        {word: 'Endaze', meaning: 'eskiden kullanılan 65cm boyunda bir uzunluk ölçüsü'},
+        {word: 'Endülüs', meaning: '711 -1492 arasındaki müslümanlığın etkisi altında bulunan bölgelere verilen isim'},
+        {word: 'Enfes', meaning: 'putlar'},
+        {word: 'Enfiye', meaning: 'toz haline getirilmiş tütünün burun deliklerine çekilerek tüketicide nefes yoluyla fizyolojik etki yaban bir tütün çeşidi'},
+        {word: 'Engin', meaning: 'açık deniz çok geniş iyi'},
+        {word: 'Enin i istimat', meaning: 'yardım iniltisi'},
+        {word: 'Enin', meaning: 'inilti, feryatlar'},
+        {word: 'Enini muhtazarı', meaning: 'ölümü bekleyen'},
+        {word: 'Enini ruh', meaning: 'ruhun inleyişi'},
+        {word: 'Enkaz ı tarumar beşer', meaning: 'darmadağın'},
+        {word: 'Enkaz-i beşer', meaning: 'insan yığını'},
+        {word: 'Ensar', meaning: 'medine yerlileri hicret eden mekkelilere yardım ederler'},
+        {word: 'Envar', meaning: 'nurlar, ışıklar, aydınlıklar. maddi veya manevi karanlıkta kurtulmaya vasıtalar olanlar'},
+        {word: 'Epsar', meaning: 'farkında olan gözler'},
+        {word: 'Erbab', meaning: 'işini iyi bilen'},
+        {word: 'Erkan', meaning: 'bir toplumun önde gelenleri, söz sahipleri ve büyükler, üstler'},
+        {word: 'Ervah', meaning: 'ruhlar'},
+        {word: 'Esaret', meaning: 'kölelik, tutsallık ve esirlik'},
+        {word: 'Esbab', meaning: 'gerektirici sebepler, gerekçeler'},
+        {word: 'Escad', meaning: 'cesetler'},
+        {word: 'Esef et-', meaning: 'üzülmek'},
+        {word: 'Eşbah', meaning: 'uzaktan görülen karartılar ve hayaller şahıslar, cisimler, benzerler.'},
+        {word: 'Eşed', meaning: 'şiddetli'},
+        {word: 'Eşhas', meaning: 'kişiler, şahıslar'},
+        {word: 'Eşkâli', meaning: 'şekiller'},
+        {word: 'Eşvak', meaning: 'şiddetli arzular, istekler'},
+        {word: 'Etfâl', meaning: 'çocuklar'},
+        {word: 'Etradı', meaning: 'şahıslar, fertler'},
+        {word: 'Evamir', meaning: 'emirler'},
+        {word: 'Evellce', meaning: 'önceleri eskileri'},
+        {word: 'Evham', meaning: 'temelsiz kaygılar kuruntular ve kuşkular'},
+        {word: 'Evkaf', meaning: 'vakıflar müdürlüğü'},
+        {word: 'Evvel', meaning: 'önce'},
+        {word: 'Evvela', meaning: 'ilk iş olarak ilkin ilk önce'},
+        {word: 'Eyer', meaning: 'binicinin rahat olmasını sağlamak için binek atlarının sırtına konulan, biçim ve tip yönünden türleri bulunan nesne'},
+        {word: 'Eytam', meaning: 'yetimler'},
+        {word: 'Eyyami', meaning: 'günler'},
+        {word: 'Ezeli', meaning: 'başlangıcı olmayan, öncesiz, eski.'}
+    ];
+
+    dictionaryData['F'] = [
+        {word: 'Faide', meaning: 'fayda, kazanç, kar, yararlılık.'},
+        {word: 'Fârûk', meaning: 'Hz. Ömer\'in lakabı. Fârûk kelimesi arapça fark (furk, furkān) kökünden türemiş mübalağalı ism-i fâildir. Fark sözlükte "iki nesnenin arasını ayırmak" mânasına gelir'},
+        {word: 'Fasıl', meaning: 'bölüm'},
+        {word: 'Fasid', meaning: 'bozuk'},
+        {word: 'Faslü\'l-hitab', meaning: 'seslenme bölümü'},
+        {word: 'Fatin', meaning: 'ışık'},
+        {word: 'Fazıl', meaning: 'değerli, erdemli'},
+        {word: 'Feca\'atle', meaning: 'içler acısı'},
+        {word: 'Fecayi', meaning: 'musibet'},
+        {word: 'Fecr', meaning: 'şafak, tan ağarması.'},
+        {word: 'Fecr-i nazan', meaning: 'nazlı şafak'},
+        {word: 'Fedai', meaning: 'her tehlikeyi göze alan ülkü yolunda canını bile esirgemeyen kimse'},
+        {word: 'Felah', meaning: 'kurtuluş'},
+        {word: 'Fenni', meaning: 'yöntemine göre yapılan ya da yönetimine göre olan'},
+        {word: 'Ferağ', meaning: 'uzak durma'},
+        {word: 'Feraiz-i iman', meaning: 'imanın şartları'},
+        {word: 'Ferda', meaning: 'yarın, gelecek zaman.'},
+        {word: 'Ferid', meaning: 'eşsiz'},
+        {word: 'Ferîk', meaning: 'osmanlı devleti\'nin son dönemi ve cumhuriyet\'in ilk yıllarında kullanılan mirliva ile ferîk-i evvel rütbeleri arasında olan ve günümüz rütbelerinden korgeneral rütbesine eşit askerî rütbe.'},
+        {word: 'Fersude', meaning: 'eskimiş'},
+        {word: 'Ferş-i rahıd', meaning: 'yolun yaygısı'},
+        {word: 'Feryad', meaning: 'bağırmak, çığlık atmak'},
+        {word: 'Fes', meaning: 'sarık'},
+        {word: 'Fesad', meaning: 'bozulma'},
+        {word: 'Fetret', meaning: 'iki olay arasında geçen süre'},
+        {word: 'Fetva', meaning: 'din adamının verdiği dini görüş'},
+        {word: 'Feve fevc', meaning: 'dalga dalga'},
+        {word: 'Fevk', meaning: 'üst'},
+        {word: 'Fevkinden', meaning: 'üstünden'},
+        {word: 'Feyfa', meaning: 'çöl'},
+        {word: 'Feylesof', meaning: 'filozof'},
+        {word: 'Feyyal', meaning: 'fil çobanı. File bakan kimse.'},
+        {word: 'Feyyaz', meaning: 'feyyaz, arapça kökenli bir isim olup "cömert", "eli açık", "bol veren" veya "bereketli" anlamına gelir. Ayrıca, bolluk ve cömertlik anlamında da kullanılmaktadır.'},
+        {word: 'Feyz', meaning: 'feyiz (feyz) ve feyezân kelimeleri (çoğulu füyûz, füyûzât) sözlükte "fazla suyun yatağından taşması, bir haberin şâyi olması, bir sırrın ifşa edilmesi" gibi anlamlara gelir (kāmus tercümesi, ıı, 1290). Feyiz kelimesi mecazi olarak "bağış ve lutufkârlık" mânasında kullanılmıştır.'},
+        {word: 'Feyza', meaning: 'bolluk, bereket, verimlilik'},
+        {word: 'Feza', meaning: 'uzay'},
+        {word: 'Fezail', meaning: 'faziletler'},
+        {word: 'Fıkka', meaning: 'ufak, çok küçük.'},
+        {word: 'Fırka', meaning: 'siyasal parti'},
+        {word: 'Fırka', meaning: 'ayırmak'},
+        {word: 'Fıtrat', meaning: 'yaratılış'},
+        {word: 'Figan', meaning: 'bağırmak'},
+        {word: 'Fikr', meaning: 'düşünce'},
+        {word: 'Fikri hürriyet', meaning: 'hürriyet düşüncesi'},
+        {word: 'Fikr-i kavmiyet', meaning: 'ırkçılık düşüncesi'},
+        {word: 'Fikr-i nezih', meaning: 'temiz düşünce'},
+        {word: 'Fil hakika', meaning: 'doğrusu, gerçekten'},
+        {word: 'Fitne', meaning: 'kargaşa, karışıklık'},
+        {word: 'Fuad', meaning: 'kalp, gönül'},
+        {word: 'Fuhuş', meaning: 'haddini aşma'},
+        {word: 'Fukaha', meaning: 'fıkıh alimleri'},
+        {word: 'Furkan-ı hakim', meaning: 'hikmetli kuran'},
+        {word: 'Fünun', meaning: 'fenler'},
+        {word: 'Fünun-ı hendese', meaning: 'geometri ilimleri'},
+        {word: 'Füshat', meaning: 'genişlik'},
+        {word: 'Füsul', meaning: 'mevsim'},
+        {word: 'Fütur', meaning: 'bezginlik'},
+                {word: 'Füyuzun', meaning: 'feyizler'}
+    ];
+
+
+    dictionaryData['G'] = [
+        {word: 'Gafil', meaning: 'aymaz, habersiz, hazırlıksız'},
+        {word: 'Gâhi', meaning: 'ara sıra, zaman zaman'},
+        {word: 'Gaib', meaning: 'görülmeyen âlem, göz önünde bulunmayan'},
+        {word: 'Galebe', meaning: 'yenmek, üstünlük'},
+        {word: 'Galeyan', meaning: 'kaynamış, mecazen coşma, hiddetlenme'},
+        {word: 'Galeyh', meaning: 'kaynama'},
+        {word: 'Galin', meaning: 'yatak'},
+        {word: 'Gamgin', meaning: 'oyun'},
+        {word: 'Garâbet', meaning: 'gariplikler, tuhaflıklar'},
+        {word: 'Garb', meaning: 'batı, avrupa'},
+        {word: 'Gârib', meaning: 'yurdundan uzak kalan, bilinmeyen, müphem, kapalı olan, eşi benzeri olmayan, tek ve nadir, yalnız, kimsesiz, zavallı'},
+        {word: 'Gaye', meaning: 'amaç, sonuç, bir şeyin son noktası, uç'},
+        {word: 'Gayet', meaning: 'aşırı ölçüde, pek çok'},
+        {word: 'Gazel', meaning: 'divan edebiyatının en yaygın nazım şekli'},
+        {word: 'Gılzet', meaning: 'kabalık, sertlik'},
+        {word: 'Girdab', meaning: 'tehlikeli yer ya da durum'},
+        {word: 'Girizan', meaning: 'kaçan, firar eden'},
+        {word: 'Girudâr', meaning: 'savaş'},
+        {word: 'Girye', meaning: 'gözyaşı'},
+        {word: 'Gisu', meaning: 'uzun saç, omuza dökülen saç'},
+        {word: 'Gubar', meaning: 'keder'},
+        {word: 'Gulgule-hiz', meaning: 'gürültü yapan'},
+        {word: 'Gulgules', meaning: 'gürültü patırtı'},
+        {word: 'Gum-nam', meaning: 'eseri kalmamış kaybolmuş'},
+        {word: 'Gunagun', meaning: 'çok çeşitli'},
+        {word: 'Gurebâ', meaning: 'yabancı, kimsesiz'},
+        {word: 'Gurüb', meaning: 'güneşin batması'},
+        {word: 'Gusn', meaning: 'kırılmış dal, ağaç dalı'},
+        {word: 'Gümrah', meaning: 'gür, bol, sık, çok'},
+        {word: 'Güne', meaning: 'gidiş'},
+        {word: 'Güş', meaning: 'işitmek, duymak'},
+        {word: 'Güyâ', meaning: 'sanırsın ki, sanki sözde'},
+        {word: 'Güzin', meaning: 'nadide, seçilmiş, seçkin, beğenilmiş'}
+    ];
+
+
+    dictionaryData['H'] = [
+        {word: 'Hab gâh', meaning: 'yatak odası'},
+        {word: 'Hab-ı sükûn', meaning: 'sakin uyku'},
+        {word: 'Habe', meaning: 'sahip olmak'},
+        {word: 'Hacet', meaning: 'gereklilik'},
+        {word: 'Hacil', meaning: 'utanmak, utanmış'},
+        {word: 'Haç', meaning: 'Hristiyanlıkta önemli bir sembol'},
+        {word: 'Had', meaning: 'yetki, sınır'},
+        {word: 'Hadim', meaning: 'hizmetkâr, hizmetçi'},
+        {word: 'Haiz', meaning: 'bir şeyi elinde bulunduran, bir şeyi olan'},
+        {word: 'Hâk', meaning: 'yer, toprak'},
+        {word: 'Hakaik', meaning: 'hakikatler'},
+        {word: 'Hakdan', meaning: 'allah\'ın yarattığı kul'},
+        {word: 'Haki', meaning: 'toprak'},
+        {word: 'Hakikat', meaning: 'gerçek'},
+        {word: 'Hakikat-ı yelda', meaning: 'uzun gecenin gerçeği'},
+        {word: 'Hâkim-i fıtrat', meaning: 'yaratılışın hâkimi'},
+        {word: 'Hakir', meaning: 'küçük, önemsiz'},
+        {word: 'Hakkı hayat', meaning: 'hayat hakkı'},
+        {word: 'Hak-sar', meaning: 'yere sermek, toz toprak içinde kalmış, perişan'},
+        {word: 'Hal', meaning: 'durum, vaziyet, görünüş, tavır'},
+        {word: 'Halas', meaning: 'kurtuluş kurtulma'},
+        {word: 'Halef', meaning: 'arkadan gelen, ardından gelen kimse'},
+        {word: 'Haleti rühiyye', meaning: 'ruh durumu'},
+        {word: 'Halife', meaning: 'Hz Muhammet\'ten sonra, onun vekili olarak Müslümanların imamlığını ve şeriatın koruyuculuğunu yapmakla görevli kimse'},
+        {word: 'Halik', meaning: 'yaratıcı, yaratan'},
+        {word: 'Halil', meaning: 'dolu, sağanak'},
+        {word: 'Halisane', meaning: 'candan'},
+        {word: 'Halk', meaning: 'ortaya koymak, meydana çıkarmak'},
+        {word: 'Hallak', meaning: 'yaratıcı'},
+        {word: 'Hamakat', meaning: 'ahmaklık, aptallık'},
+        {word: 'Hamaset', meaning: 'kahraman, kahramanlık, yiğitlik'},
+        {word: 'Hamiyyet', meaning: 'milleti himaye etmekte, korumakta işaretini savunmakta, tembellik etmeyip, bütün kuvveti gayret etmek'},
+        {word: 'Hamuş', meaning: 'sakin, suskun'},
+        {word: 'Han ü man', meaning: 'ev bark, aile ocağı'},
+        {word: 'Hande-i nur', meaning: 'parlak gülüş'},
+        {word: 'Hane', meaning: 'ev, konut'},
+        {word: 'Hanumansız', meaning: 'evsiz'},
+        {word: 'Har', meaning: 'hor, hakir, adi, aşağı'},
+        {word: 'Hara', meaning: 'tepinme oynama'},
+        {word: 'Harab', meaning: 'yıkılmaya yüz tutmuş ve çok eski ve perişan'},
+        {word: 'Harameyn', meaning: 'mekke ve medine şehirlerini birlikte ifade eden tabir'},
+        {word: 'Haras', meaning: 'dilsizlik, dilsiz olma'},
+        {word: 'Harb', meaning: 'savaş'},
+        {word: 'Harde', meaning: 'zorlu'},
+        {word: 'Harem', meaning: 'padişahın aile yaşamını sürdürdüğü, padişah, şehzade ve devlet ileri gelenlerine cariye ve eş temin edilen yer'},
+        {word: 'Harim-i din', meaning: 'dinin korunması'},
+        {word: 'Hârim', meaning: 'yasaklanan, korunan, saygı duyulan şey'},
+        {word: 'Harim-i canan', meaning: 'sevgili yuvası'},
+        {word: 'Hasbi', meaning: 'gönüllü olarak ve karşılık beklemeksizin yapılan, nedeni olmayan, nedensiz, karşılıksız'},
+        {word: 'Hasıl', meaning: 'ortaya çıkan, türeyen, var olan'},
+        {word: 'Hasire', meaning: 'zarara uğrayan'},
+        {word: 'Hasis', meaning: 'cimri'},
+        {word: 'Hasm', meaning: 'en büyük düşman'},
+        {word: 'Hasmım', meaning: 'düşman'},
+        {word: 'Haş', meaning: 'özel, çok yakın'},
+        {word: 'Haşa', meaning: 'İslam dininde uygun olarak kabul edilmeyenler bir söze ve davranışa sinme'},
+        {word: 'Haşr', meaning: 'birlikte olmak, yan yana olma, toplanmak'},
+        {word: 'Haşyet', meaning: 'korku, korkma, endişe duyma'},
+        {word: 'Hatır', meaning: 'düğün'},
+        {word: 'Hatırat-ı latif', meaning: 'tatlı hatıralar'},
+        {word: 'Hatip', meaning: 'söz söyleyen, cemaatte topluluğa karşı güzel söz söyleyen'},
+        {word: 'Hatmi enfas', meaning: 'nefesleri tükenmek, ölmek'},
+        {word: 'Hatve', meaning: 'adım, mesafe'},
+        {word: 'Havali', meaning: 'çevre, dolay, yöre'},
+        {word: 'Havas', meaning: 'yüksek seviyede olanlar'},
+        {word: 'Havatır', meaning: 'akla gelmek'},
+        {word: 'Havi', meaning: 'ihtiva eden, içeren'},
+        {word: 'Havsala', meaning: 'zihnin bir şeyi kavrama derecesi'},
+        {word: 'Havvas', meaning: 'yüksek seviyede olanların, üstekilerin'},
+        {word: 'Haya', meaning: 'utanmak, çekinmek'},
+        {word: 'Hayat ı nev', meaning: 'yepyeni yaşam'},
+        {word: 'Haybet', meaning: 'saygıya dayanan korku, mahremiyet'},
+        {word: 'Hayfa', meaning: 'yazık'},
+        {word: 'Hayme', meaning: 'çadır'},
+        {word: 'Hayret', meaning: 'beklenmedik, şaşırtıcı, garip bir şeyin açtığı şaşkınlık'},
+        {word: 'Haysiyet', meaning: 'şeref, itibar'},
+        {word: 'Hayyiz', meaning: 'mekân, yer, makam'},
+        {word: 'Hazin', meaning: 'içe dokunan, üzüntü verici, acıklı'},
+        {word: 'Heder', meaning: 'boşa gitme, ziyan olma bir işe yaramama karşılığını alamama vücudun bir organında görülen uyuşma'},
+        {word: 'Helak', meaning: 'ortadan kaldırma, yok etme'},
+        {word: 'Helecan', meaning: 'titretme, çarpıntı'},
+        {word: 'Hemal', meaning: 'taşımak'},
+        {word: 'Hemşizade', meaning: 'kız kardeşin çocuğu'},
+        {word: 'Hercümerc', meaning: 'darma dağın'},
+        {word: 'Herdem', meaning: 'taşımak'},
+        {word: 'Herze', meaning: 'saçma sapan söz ya da davranış. boş laf, söz, lakırdı'},
+        {word: 'Hesti', meaning: 'varlık, var olma'},
+        {word: 'Heval', meaning: 'dost'},
+        {word: 'Hey\'et', meaning: 'kurul'},
+        {word: 'Heybet', meaning: 'yücelik, azamet, büyüklük'},
+        {word: 'Heybetli', meaning: 'görünüşü korku ve saygı uyandıran'},
+        {word: 'Heyhat', meaning: 'yazık, yazık ki anlamında kullanılır'},
+        {word: 'Heyula', meaning: 'korkunç hayal, ürkütücü şey'},
+        {word: 'Hezel', meaning: 'alay, şaka'},
+        {word: 'Hezeyan', meaning: 'abuk sabuk konuşma saçma sapan sözler etme saçmalama'},
+        {word: 'Hezeyas', meaning: 'sayıklama'},
+        {word: 'Hezimet', meaning: 'bozgun'},
+        {word: 'Hicran-ı müebbed', meaning: 'sonsuz ayrılık'},
+        {word: 'Hicran', meaning: 'ayrılık'},
+        {word: 'Hidayet', meaning: 'bir kimseyi tanrı tarafından gönderildiğine inanılan doğru yol'},
+        {word: 'Hiddet', meaning: 'sinir, öfke'},
+        {word: 'Hikmet i kuran', meaning: 'kurana mahsus hikmet'},
+        {word: 'Hilaf', meaning: 'zıt'},
+        {word: 'Hilkat', meaning: 'Allah\'ın yaratması'},
+        {word: 'Himmet', meaning: 'kayırma, yardım, çaba, çalışma'},
+        {word: 'Hiram', meaning: 'yürüme, gezinme, salınarak eda ve naz ile yürüme'},
+        {word: 'Hissi-i milliyet', meaning: 'milliyet duygusu'},
+        {word: 'Hizb', meaning: 'kısım, parça'},
+        {word: 'Hotoz', meaning: 'eski zamanlarda kadınların başlarına giydikleri süslü serpuş'},
+        {word: 'Hödük', meaning: 'anlayışı kıt, kaba saba kimse'},
+        {word: 'Hucüm', meaning: 'saldırı'},
+        {word: 'Hucüs', meaning: 'sessiz, sakin durmak, alçak gönüllü olmak'},
+        {word: 'Huda', meaning: 'doğru yol veya doğru yolu gösteren kişi'},
+        {word: 'Hufre', meaning: 'çukur'},
+        {word: 'Hulul', meaning: 'birşeyi çözmek bir yere intikal etmek konup yerleşmek'},
+        {word: 'Hunu', meaning: 'kanı'},
+        {word: 'Hurab', meaning: 'bakımsız kalmış, bakımsızlıktan yıkılacak duruma gelmiş olan'},
+        {word: 'Huraf', meaning: 'harfler'},
+        {word: 'Hurafat', meaning: 'hurafeler, harfler.'},
+        {word: 'Hurafe', meaning: 'akla aykırı, uydurma şeyler'},
+        {word: 'Huruş aver', meaning: 'gürültü aşama'},
+        {word: 'Huruş', meaning: 'coşku, coşmak'},
+        {word: 'Huruşan', meaning: 'esip coşmak'},
+        {word: 'Hurüş', meaning: 'kendinden geçme'},
+        {word: 'Hutbe', meaning: 'söz söylemek, hitap etmek, konuşmak'},
+        {word: 'Hutur', meaning: 'kafası karışmış'},
+        {word: 'Hutür', meaning: 'akla getirmek'},
+        {word: 'Hüccet', meaning: 'delil, senet'},
+        {word: 'Hüdud', meaning: 'sınır'},
+        {word: 'Hüfeyre', meaning: 'çukur'},
+        {word: 'Hülasa', meaning: 'özet'},
+        {word: 'Hülya', meaning: 'tatlı düş, hayal'},
+        {word: 'Hümüs', meaning: 'bitkilerin çürümesiyle oluşmuş olan koyu renkte organik toprak'},
+        {word: 'Hün-i mazlum', meaning: 'mazlum kanı'},
+        {word: 'Hün', meaning: 'kan'},
+        {word: 'Hüruşa', meaning: 'coşup ağlamak'},
+        {word: 'Hürüş', meaning: 'coşkun, coşma'},
+        {word: 'Hüsn', meaning: 'güzellik'},
+        {word: 'Hüsran', meaning: 'mahrumiyet, kayıp, ümitsizlik, elem'},
+        {word: 'Hüsran', meaning: 'umulan beklenilen bir şeyin elde edilememesinden duyulan acı düş kırıklığı'},
+        {word: 'Hüveyde', meaning: 'aşikar'},
+        {word: 'Hüzme', meaning: 'demet'}
+    ];
+
+    dictionaryData['I'] = [
+        {word: 'Irgat', meaning: 'çalışan, işçi'},
+        {word: 'Irşâd', meaning: 'doğru yolu göstermek'},
+        {word: 'Islah', meaning: 'düzeltme'}
+    ];
+
+    dictionaryData['İ'] = [
+        {word: 'İ\'la', meaning: 'yüceltme'},
+        {word: 'İ\'laya', meaning: 'yüceltmek'},
+        {word: 'İane', meaning: 'yardım'},
+        {word: 'İbahiyye', meaning: 'haram yasak olan şeyleri helal kılmış'},
+        {word: 'İbn-i avf', meaning: 'abdurrahman b.avf'},
+        {word: 'İbraz', meaning: 'ortaya koymak'},
+        {word: 'İbret', meaning: 'kötü, yanlış davranışlardan sakınmayı sağlayan olgu'},
+        {word: 'İcazet', meaning: '1.izin, onay, onaylama. 2.diploma.'},
+        {word: 'İcbar', meaning: 'zorlama'},
+        {word: 'İctihad', meaning: 'sosyal hayatta şeriatın kaynaklarında yer alamayan soruları çözmek için zihinsel çaba harcama'},
+        {word: 'İçtimai', meaning: 'topplumsal'},
+        {word: 'İddiay-ı kavmiyet', meaning: 'ırkçılık iddiası'},
+        {word: 'İdlal', meaning: 'saptırmak'},
+        {word: 'İdrak', meaning: 'zihin'},
+        {word: 'İffet', meaning: 'namus'},
+        {word: 'İfsad', meaning: 'bozgunculuk'},
+        {word: 'İgze', meaning: 'izin, onay'},
+        {word: 'İhkak', meaning: 'hak'},
+        {word: 'İhsan', meaning: 'iyilik'},
+        {word: 'İhtar', meaning: 'uyarı'},
+        {word: 'İhtiram', meaning: 'saygı'},
+        {word: 'İhvan', meaning: '1. yakın dostlar, yakın arkadaşlar. 2.aynı tarikattan olan kimseler.'},
+        {word: 'İhya', meaning: 'diriltme'},
+        {word: 'İkbal', meaning: 'yüksek bir makama erişme'},
+        {word: 'İkdam', meaning: 'gayretle çalışma'},
+        {word: 'İkmal', meaning: 'bütünleme'},
+        {word: 'İkrar', meaning: 'bildirme, açıkça söylemek'},
+        {word: 'İktiham', meaning: 'bir zorluğu giderme'},
+        {word: 'İlahi', meaning: 'tanrısal'},
+        {word: 'İlhad', meaning: 'küfür, inkar, dinsizlik'},
+        {word: 'İlik', meaning: 'kemiklerin iç boşluklarını dolduran doku'},
+        {word: 'İlim', meaning: 'evrenin veya olayların bir bölümünü konu olarak seçen gerçeğe dayanan yöntemlerle sonuç çıkarmaya yarayan düzenli bilgi'},
+        {word: 'İllet', meaning: 'hastalık'},
+        {word: 'İltia', meaning: 'sığınma'},
+        {word: 'İltikaf', meaning: 'kendini bir konuya verme'},
+        {word: 'İltiva', meaning: 'kıvrılmak'},
+        {word: 'İmdat', meaning: 'yardım'},
+        {word: 'İmhal', meaning: 'bırakmak, mühlet verme'},
+        {word: 'İmti dad-ı mehibince', meaning: 'heybetli, uzama'},
+        {word: 'İmtidat', meaning: 'uzanmak'},
+        {word: 'İmtizac', meaning: 'uygunluk'},
+        {word: 'İnayet', meaning: 'lütüf, ihsan, iyilik, yardım'},
+        {word: 'İncizab', meaning: 'kapılmak'},
+        {word: 'İnfan', meaning: 'bilmek'},
+        {word: 'İnfial', meaning: 'gücenme, darılma'},
+        {word: 'İnfial', meaning: 'tutuşan'},
+        {word: 'İnfilali', meaning: 'kızgınlık duyma'},
+        {word: 'İnkılap', meaning: 'devrim, değişim'},
+        {word: 'İnkıyad', meaning: 'boyun eğme, uyma'},
+        {word: 'İnkisar', meaning: 'kırılma, gücenme'},
+        {word: 'İnkişaf', meaning: 'gelişim, gelişme'},
+        {word: 'İnkişaf', meaning: 'gelişme, gelişim, gelişmiş'},
+        {word: 'inlem', meaning: 'acı sesler'},
+        {word: 'İnsaf', meaning: 'acıma, mantığa dayalı adalet duygusu'},
+        {word: 'İnsaniyet', meaning: 'insanlık'},
+        {word: 'İnşad', meaning: 'şiir okuma'},
+        {word: 'İntibah', meaning: '1-sinirlerin uyanması, uzuvların harekete geçmesi, 2-uyanış, uyanma.'},
+        {word: 'İptidai', meaning: 'ilkel mektep, osmanlı zamanında küçükten büyüye eğitim düzeyi'},
+        {word: 'İrfan', meaning: 'anlama, kültür'},
+        {word: 'İrşad', meaning: 'doğru yolu gösteren'},
+        {word: 'İsabat', meaning: 'bir şeyi açıklığa kavuşturmak delil getirmek'},
+        {word: 'İskandil', meaning: 'derinlik ölçme aleti'},
+        {word: 'İskirham', meaning: 'yalvarış'},
+        {word: 'İsti dad', meaning: 'yetenek'},
+        {word: 'İstibdat', meaning: 'baskıcı yönetim'},
+        {word: 'İstidat', meaning: 'yetenek, hazırlık'},
+        {word: 'İstihfaf', meaning: 'hafife alma'},
+        {word: 'İstihkar', meaning: 'hakir, zelil'},
+        {word: 'İstikbal', meaning: 'gelecek'},
+        {word: 'İstiknah', meaning: 'araştırma'},
+        {word: 'İstikrah', meaning: 'iğrenmek, tiksinmek'},
+        {word: 'İstimdat', meaning: 'tehlikeli durumlarda yardım isteme'},
+        {word: 'İstinsah', meaning: 'kopye'},
+        {word: 'İstirham', meaning: 'yalvarma'},
+        {word: 'İşar', meaning: 'göstermek'},
+        {word: 'İşrak', meaning: 'parıltı'},
+        {word: 'İşve', meaning: 'aldatıcı çekici hoş tavır'},
+        {word: 'İşve', meaning: 'cilve'},
+        {word: 'İtilla', meaning: 'yükselme'},
+        {word: 'İttihaz', meaning: 'sayma, tutma'},
+        {word: 'İyan', meaning: 'aşikar'},
+        {word: 'İyazen', meaning: 'sığınma'},
+        {word: 'İyd', meaning: 'bayram'},
+        {word: 'İzan', meaning: 'kavrayış'},
+        {word: 'İzdiham', meaning: 'kalabalık'},
+        {word: 'İzmihlal', meaning: 'çökme, yıkılma, yok oluş'},
+        {word: 'İzzet', meaning: 'büyüklük, ululuk, yücelik'}
+    ];
+
+    dictionaryData['J'] = [
+        {word: 'Jamime', meaning: 'Genelleştirme'},
+        {word: 'Janafeyri', meaning: 'İki yön'},
+        {word: 'Jazib', meaning: 'Eziyet etme'},
+        {word: 'Jemaşare', meaning: 'Seyretmek'},
+        {word: 'Jemine', meaning: 'Güven verme'},
+        {word: 'Jerezu', meaning: 'Bakışma'},
+        {word: 'Jevcih', meaning: 'Yönetme'},
+        {word: 'Jimsal\'i ilahi', meaning: 'İlahi benzetme'}
+    ];
+
+dictionaryData['K'] = [
+    {word: 'arar ı erzeli', meaning: 'en rezil karar'},
+    {word: 'Ka betullah', meaning: 'Allah\'ın kabesi'},
+    {word: 'Kabail', meaning: 'Kabileler'},
+    {word: 'Kâbetullah', meaning: 'Allah\'ın kabesi'},
+    {word: 'Kabil', meaning: 'Mümkün olan, kabul edilen'},
+    {word: 'Kabiliyet', meaning: 'Yetenek'},
+    {word: 'Kabristan', meaning: 'Mezarlık'},
+    {word: 'Kabus -i huni', meaning: 'Kanlı kabus'},
+    {word: 'Kadı asker', meaning: 'Osmanlıda şeri davalara bakan askeri hâkim'},
+    {word: 'Kadid', meaning: 'iskelet'},
+    {word: 'Kadim', meaning: 'Çok eski zamandan var olmuş veya eskiden beri var olan'},
+    {word: 'Kadr', meaning: 'değer bilmek'},
+    {word: 'Kadrül lahtan', meaning: 'Allah\'ın kaderi'},
+    {word: 'Kâfi', meaning: 'Yeter'},
+    {word: 'Kafile', meaning: 'grup'},
+    {word: 'Kaftan', meaning: 'İpekli kumaş, giysi'},
+    {word: 'Kah olmak', meaning: 'Ara sıra, kimi kez'},
+    {word: 'Kahbe', meaning: 'Hilekâr, kalleş'},
+    {word: 'Kair', meaning: 'Derinlik, dip'},
+    {word: 'Kalpak', meaning: 'Deriden kürkten başlık'},
+    {word: 'Kaltaban', meaning: 'Hileci- düzenci'},
+    {word: 'Kamer', meaning: 'Ay'},
+    {word: 'Kâmilen', meaning: 'topluca hep birlikte'},
+    {word: 'Kamş', meaning: 'Meşelik ağaç'},
+    {word: 'Kandil', meaning: 'Fener'},
+    {word: 'Kani', meaning: 'Kişinin düşünerek vardığı ve inandığı sonuç inanılan düşünce kesin düşünce'},
+    {word: 'Kanun- i sa\'y', meaning: 'Çalışma kanunu'},
+    {word: 'Kanun-i esasi', meaning: 'Anayasa'},
+    {word: 'Kar ü bâr', meaning: 'Vur kaç tekniği'},
+    {word: 'Kâr', meaning: 'Kazanç'},
+    {word: 'Karar-ı erzel', meaning: 'En rezil karar'},
+    {word: 'Karban', meaning: 'Kervan'},
+    {word: 'Kari', meaning: 'Okuyucu'},
+    {word: 'Karib', meaning: 'Yakın'},
+    {word: 'Karye', meaning: 'Köy'},
+    {word: 'Kasaid', meaning: 'kasideler'},
+    {word: 'Kasvet', meaning: 'İç sıkıntı'},
+    {word: 'Katre- i avare', meaning: 'Başıboş damla'},
+    {word: 'Katre', meaning: 'Damlacıklar, kuyudan damlayan su'},
+    {word: 'Kavi', meaning: 'Kuvvetli'},
+    {word: 'Kavim', meaning: 'Aynı soydan gelen töre dil ve kültürleri bir olan insan topluluğu'},
+    {word: 'Kavm-i Necib', meaning: 'soylu seçkin temiz ulus'},
+    {word: 'Kavmiyyet', meaning: 'Irkçılık'},
+    {word: 'Kavzan', meaning: 'Titreyen'},
+    {word: 'Kayd', meaning: 'Bağlamak'},
+    {word: 'Kayd -ı ömür', meaning: 'yaşadığı süreç'},
+    {word: 'Kebe', meaning: 'Kısa kepenek'},
+    {word: 'Keçe', meaning: 'Koyun, keçi, deve, tavşan vb. gibi hayvanların yapağısının, tüyünün dürülmesi, dövülmesi yoluyla yapılan kalın kumaş'},
+    {word: 'Kehvâne', meaning: 'Beşik'},
+    {word: 'Kemal- i Acizlik', meaning: 'Güçsüzlük'},
+    {word: 'Kemal -i Şiddet', meaning: 'Büyük bir şiddet'},
+    {word: 'Kerhen', meaning: 'İğrenerek'},
+    {word: 'Keşmekeş', meaning: 'Karışık olma durumu'},
+    {word: 'Kevni', meaning: 'Oluşan ait ve müteallik'},
+    {word: 'Kevr', meaning: 'Devretmek, dönmek'},
+    {word: 'Kevre', meaning: 'Zayıf, çelimsiz'},
+    {word: 'Kılağı', meaning: 'Taş üzerinde bilinen bir kesici aracın keskin yüzüne yapı zarı ve iyi kesilebilmesi için gereken çok ince çelik parçalar'},
+    {word: 'Kıyam', meaning: 'Ayağa kalkış, bir şe girişme kalkışma'},
+    {word: 'Kıyam edip', meaning: 'Ayağa kalkmak'},
+    {word: 'Kıyam', meaning: 'Ayağa kalkış'},
+    {word: 'Kıyamı Haşr', meaning: 'kıyamet günü'},
+    {word: 'Kibar ı ümmeti', meaning: 'Ümmetin büyüğü'},
+    {word: 'Kibari', meaning: 'Büyükler'},
+    {word: 'Kitabü\'l fetva', meaning: 'Fetva kitabı'},
+    {word: 'Koğ', meaning: 'Çekiştirme, kötüleme'},
+    {word: 'Kontrant', meaning: 'Sözleşme'},
+    {word: 'Kopuk', meaning: 'toplum kurallarına uymayan, işsiz güçsüz'},
+    {word: 'Kudumiye', meaning: 'Büyük bir kimseye yoldan geldiği zaman sunulan hediye'},
+    {word: 'Kurb', meaning: 'yakın'},
+    {word: 'Kûrs-î celâl', meaning: 'Hiddet kürsüsü'},
+    {word: 'Kuruntu', meaning: 'Yanlış sanı, düşünce'},
+    {word: 'Kuvai', meaning: 'Kuvvetler, güçler'},
+    {word: 'Kuyûd', meaning: 'Kayıtlar, sınırlamalar'},
+    {word: 'Kübra', meaning: 'En büyük olan yol ya da büyük'},
+    {word: 'Küdein', meaning: 'İlaç'},
+    {word: 'Küfar', meaning: 'Kâfirler'},
+    {word: 'Kühen', meaning: 'Köhne'},
+    {word: 'Kühne', meaning: 'Gözü pek'},
+    {word: 'Kühsar', meaning: 'Dağlık yer, dağ tepesi'},
+    {word: 'Külhan', meaning: 'Kabadayı, serseri'},
+    {word: 'Külhanbeyi', meaning: 'Kabadayı, serseri'},
+    {word: 'Kürs-i mehib', meaning: 'Heybetli kürsü'},
+    {word: 'Kürsi', meaning: 'Taht, hükümdarlık'}
+];
+
+dictionaryData['L'] = [
+    {word: 'La yüsel', meaning: 'Sorumsuz'},
+    {word: 'Lafz', meaning: 'Ağızdan çıkan anlamlı ses veya sözün bildirilmesi'},
+    {word: 'Lafz-ı muhkem', meaning: 'Başka bir ihtimal taşımayan açık manalı ayet ve hadislerle fıkıh usulünde açıklık bakımından en üst düzeydeki lafız için kullanılan bir terim'},
+    {word: 'Lahavle', meaning: 'Artık sabrın tükendiğinde belirtmek için kullanılır.'},
+    {word: 'Lahik', meaning: 'Ulaşan'},
+    {word: 'Lahut', meaning: 'ruhani, insanın ilahi ve manevi yönü'},
+    {word: 'Lahut', meaning: 'İlahi alem, manevi alem'},
+    {word: 'Lahuti', meaning: 'Tanrısal'},
+    {word: 'Lahza', meaning: 'An'},
+    {word: 'Lakin', meaning: 'Ama, ancak, fakat'},
+    {word: 'Lal', meaning: 'Dilsiz'},
+    {word: 'Lamise', meaning: 'Dokunma'},
+    {word: 'Lane', meaning: 'Yuva, ev'},
+    {word: 'Laşe', meaning: 'Leş'},
+    {word: 'Latif', meaning: 'Güzel'},
+    {word: 'Latif', meaning: 'Nazik ve merhametli davranmak, iyi muamele etmek'},
+    {word: 'Leb', meaning: 'Dudak'},
+    {word: 'Leb-i derya', meaning: 'Denizin altı'},
+    {word: 'Lebriz', meaning: 'Taşkın, taşacak kadar, ağzına kadar dolu'},
+    {word: 'Lebriz-i meserret', meaning: 'Sevinçle dolmak'},
+    {word: 'Ledün', meaning: 'Zaman ve mekân zarfı'},
+    {word: 'Leim', meaning: 'yol göstermek'},
+    {word: 'Leim', meaning: 'Alçak'},
+    {word: 'Lem\'a lem\'a', meaning: 'Parıl parıl'},
+    {word: 'Lemeân', meaning: 'Parlama, parıldama'},
+    {word: 'Lems', meaning: 'Dokunmak'},
+    {word: 'Lerzan eyle-', meaning: 'Titremek'},
+    {word: 'Lerzedar', meaning: 'Titrek, titreyen'},
+    {word: 'Levazım', meaning: 'Lazım olan şeyler, askeri malzemeler'},
+    {word: 'Levh-i güzin', meaning: 'seçkin tablo'},
+    {word: 'Leyâl', meaning: 'Geceler, karanlık'},
+    {word: 'Leyl-gun', meaning: 'Gece renkli'},
+    {word: 'Leyl-i matem', meaning: 'Matem gecesi'},
+    {word: 'Leyse li\'l insani illa mâ-se-â', meaning: 'İnsanın kendi çaba ve çalışmasından başka bir şey yoktur.'},
+    {word: 'Lihye-i Paki', meaning: 'Hz. Peygamberin yaratılışını, dış görünüşünü, mübarek vücut şeklini ve onun bütün güzel sıfatlarını ifade etmek için kullanılan bir deyim'},
+    {word: 'Lika', meaning: 'Kavuşma'},
+    {word: 'Lisan', meaning: 'Dil'},
+    {word: 'Lisan-ı gayb', meaning: 'Görünmeyen alemin dili'},
+    {word: 'Lisan-ı hal', meaning: 'Hal dili'},
+    {word: 'Lisan-ı şiir', meaning: 'Şiir dili'},
+    {word: 'Lüb', meaning: 'Öz'}
+];
+
+dictionaryData['M'] = [
+    {word: 'Ma budanlar', meaning: 'ilah'},
+    {word: 'Ma sum', meaning: 'suçsuz'},
+    {word: 'Ma\'bed', meaning: 'tapınak, ibadet yeri'},
+    {word: 'Ma\'bed-i feyyaz', meaning: 'bereket veren'},
+    {word: 'Ma\'mafih', meaning: 'durum böyleyken'},
+    {word: 'Ma\'na', meaning: 'anlam'},
+    {word: 'Ma\'sume', meaning: 'günahsız millet'},
+    {word: 'Maarifet', meaning: 'herkesin gösteremeyeceği beceri, beceriklilik, hüner, ustalık'},
+    {word: 'Mademki', meaning: 'çünkü'},
+    {word: 'Mağribi aksaya', meaning: 'en uzak batı'},
+    {word: 'Mahal', meaning: 'yer, yöre'},
+    {word: 'Mahfil', meaning: 'toplandırılacak yer'},
+    {word: 'Mahirane', meaning: 'ustaca'},
+    {word: 'Mahiyet', meaning: 'Nitelik, önem'},
+    {word: 'Mahiyyet', meaning: 'bir şeyin iç yüzü, aslı, esası'},
+    {word: 'Mahkûm', meaning: 'Esir'},
+    {word: 'Mahlûkat', meaning: 'Yaratık'},
+    {word: 'Mahmur', meaning: 'sarhoşluğun verdiği uyuşukluk, sersemlik'},
+    {word: 'Mahrum', meaning: 'yoksun'},
+    {word: 'Mahviyyet', meaning: 'Alçak gönüllülük'},
+    {word: 'Mahz', meaning: 'Sade'},
+    {word: 'Maişet', meaning: 'Geçinme'},
+    {word: 'Makber', meaning: 'Mezar'},
+    {word: 'Makrun', meaning: 'Ulaşılmış, kavuşulmuş olan'},
+    {word: 'Maksad', meaning: 'amaç'},
+    {word: 'Malik', meaning: 'Sahip'},
+    {word: 'Malike l mülk', meaning: 'mülkün sahibi'},
+    {word: 'Malta', meaning: 'Güney Avrupa\'dan Orta Akdeniz\'de yer alan Sicilya\'nın güneyindeki adalar devleti'},
+    {word: 'Mamelek', meaning: 'Bir kimsenin para ile ölçülebilen her türlü mal, hak ve borçların tümü'},
+    {word: 'Mani', meaning: 'Engel'},
+    {word: 'Manzur', meaning: 'Görülen, bakılan, nazar edilen'},
+    {word: 'Masivar', meaning: 'Allah\'ın dışındaki varlıklar'},
+    {word: 'Maskara', meaning: 'Eğlendirici'},
+    {word: 'Masnu', meaning: 'sanat eseri'},
+    {word: 'Matbaa', meaning: 'Basma evi'},
+    {word: 'Matbuat', meaning: 'Basın'},
+    {word: 'Matem', meaning: 'Yas'},
+    {word: 'Matlub', meaning: 'İstenilen'},
+    {word: 'Matvi', meaning: 'Bükülü, dürülmüş şey'},
+    {word: 'Maun', meaning: 'Yardım ve zekât, Eve lâzım şeyler. Ev eşyası.'},
+    {word: 'Mazi', meaning: 'geçmiş'},
+    {word: 'Mazi', meaning: 'Geçmiş'},
+    {word: 'Mazik', meaning: 'Dar yer'},
+    {word: 'Mazlum', meaning: 'Zulüm görmüş'},
+    {word: 'Mazlümine', meaning: 'Mazlumlar'},
+    {word: 'Me mül', meaning: 'Umulan,beklenen'},
+    {word: 'Me var', meaning: 'Sekiz cennetten üçüncü'},
+    {word: 'Me yüs', meaning: 'Ümitsiz, üzgün'},
+    {word: 'Me\'lun', meaning: 'Lanetli'},
+    {word: 'Meal i hilkute', meaning: 'Yaratılış manası'},
+    {word: 'Meal', meaning: 'Anlam'},
+    {word: 'Medfenin', meaning: 'Ölüm'},
+    {word: 'Medfun', meaning: 'Defnedilmiş'},
+    {word: 'Medhuş', meaning: 'Dehşete uğramış'},
+    {word: 'Mefahir', meaning: 'Övünme, övünülecek şeyler'},
+    {word: 'Mefkure', meaning: 'Gaye,ülkü,ideal'},
+    {word: 'Mehib', meaning: 'Heybetli'},
+    {word: 'Mekabir', meaning: 'Kabirler, mezarlar, mezarlıklar'},
+    {word: 'Mektep', meaning: 'Okul'},
+    {word: 'Mel anetleri', meaning: 'Melunluk'},
+    {word: 'Mel un', meaning: 'Kötü, alçak, yaramaz'},
+    {word: 'Melahat', meaning: 'Güzel'},
+    {word: 'Melal', meaning: 'Can sıkıntısı, usanma, kader'},
+    {word: 'Melkandler', meaning: 'Mezarlar'},
+    {word: 'Memdud', meaning: 'Uzatılmış, yayılmış, çekilmiş'},
+    {word: 'Menar', meaning: 'Aydın, kültürlü, görgülü, ileri görüşlü'},
+    {word: 'Menazır', meaning: 'Görünüş'},
+    {word: 'Menba', meaning: 'Kaynak, pınar'},
+    {word: 'Menevir', meaning: 'Bir şey üzerinde dalgalanıyormuş hissini veren parlak renkler meydana gelmesi.'},
+    {word: 'Menzil i aram', meaning: 'Dinlenme yeri'},
+    {word: 'Menzil-i Feyza', meaning: 'İlim dolu nehir'},
+    {word: 'Mer', meaning: 'Elli'},
+    {word: 'Merared', meaning: 'Acılık'},
+    {word: 'Merartib', meaning: 'dereceler'},
+    {word: 'Merayan', meaning: 'engebeli'},
+    {word: 'Merbüd', meaning: 'Bağlı'},
+    {word: 'Merdane', meaning: 'Yiğitçe'},
+    {word: 'Merdüd', meaning: 'Geri çevrilmiş'},
+    {word: 'Merdüm', meaning: 'İnsan'},
+    {word: 'Mersiye', meaning: 'Divan edebiyatında ölüm konusunu işleyen şiir'},
+    {word: 'Mes\'uliyet', meaning: 'Sorumluluk'},
+    {word: 'Mesacidin', meaning: 'Secde edenler'},
+    {word: 'Mesire', meaning: 'Gezilecek yer'},
+    {word: 'Mestur', meaning: 'Örtülmüş, setredilmiş, gizlenmiş'},
+    {word: 'Meş al i vahdet', meaning: 'Birlik meşalesi'},
+    {word: 'Meş\'üm', meaning: 'Uğursuz, kir, pis, bedbaht'},
+    {word: 'Meşhed', meaning: 'Mezar, şehitlik'},
+    {word: 'Meşhudat', meaning: 'Tanıklık'},
+    {word: 'Meşhüd', meaning: 'Gözlemlenen görülen'},
+    {word: 'Meşiyih', meaning: 'Önderler, liderler'},
+    {word: 'Meşiyyet', meaning: 'İrade,istek,yürüyüş,yürütme'},
+    {word: 'Meşreb', meaning: 'Yaratılış'},
+    {word: 'Meta-ı mebzul', meaning: 'Bolca bulunan ucuz nesne'},
+    {word: 'Metalib', meaning: 'İstenen şeyler'},
+    {word: 'Methal', meaning: 'Giriş'},
+    {word: 'Mev üd i', meaning: 'Varlık ve yokluk'},
+    {word: 'Mevc i tufan', meaning: 'Hak yoldan sapkınlık'},
+    {word: 'Mevcan mevc', meaning: 'Dalga dalga'},
+    {word: 'Mevce', meaning: 'Dalga'},
+    {word: 'Mevcfidat', meaning: 'Ölüm'},
+    {word: 'Mevcud', meaning: 'Var olan, varlık'},
+    {word: 'Mevhum', meaning: 'Gerçekte olmayıp varsayılan, var diye düşünülen'},
+    {word: 'Mevki', meaning: 'Yer'},
+    {word: 'Mevkib', meaning: 'Kafile,alay,kortej'},
+    {word: 'Mevkib-i şad', meaning: 'Sevinç alayı'},
+    {word: 'Mevküt', meaning: 'Vakitli'},
+    {word: 'Mevşuk', meaning: 'Güvenilir'},
+    {word: 'Mevzu', meaning: 'Konu'},
+    {word: 'Meyil', meaning: 'Eğilme'},
+    {word: 'Meyse', meaning: 'Yürümek'},
+    {word: 'Meyus', meaning: 'Ümitsiz,üzgün'},
+    {word: 'Meyüsane', meaning: 'Ümitsizce'},
+    {word: 'Meyyit', meaning: 'Ölü'},
+    {word: 'Mezbele', meaning: 'Çöplük'},
+    {word: 'Mezellet', meaning: 'Alçaklık,düşkünlük'},
+    {word: 'Mihnet', meaning: 'Üzüntü, sıkıntı'},
+    {word: 'Mihrak semavid', meaning: ''},
+    {word: 'Mihrak', meaning: 'Odak noktası merkez'},
+    {word: 'Mihrap', meaning: 'İmamın camide namaz kıldığı yer'},
+    {word: 'Mihriban', meaning: 'Sevilen'},
+    {word: 'Mikyas', meaning: 'Ölçü'},
+    {word: 'Millet-i merhume', meaning: 'Ölü millet'},
+    {word: 'Misyoner', meaning: 'Hristiyan olmayan toplumlardan bu dini yaymaya çalışan bununla görevli kimse'},
+    {word: 'Mokbor', meaning: 'Mezar, gömüt ya da kabir'},
+    {word: 'Mu\'tandın', meaning: 'İstenen şey'},
+    {word: 'Muabbededn', meaning: 'Sonsuza dek'},
+    {word: 'Muaddili', meaning: 'Benzer, denk, eşit, eş değer'},
+    {word: 'Muammer', meaning: 'Uzun ömürlü, uzun yaşayan'},
+    {word: 'Muarra', meaning: 'Çıplak, temiz, pak, arınmış'},
+    {word: 'Muazzam cereyanlar', meaning: 'Büyük akış'},
+    {word: 'Muazzam', meaning: 'Eşsiz, büyük, yüce'},
+    {word: 'Muazzezzdi', meaning: 'Aziz, yüce, kutsal'},
+    {word: 'Mubassır', meaning: 'Okullarda öğrencilerin durumu ile ilgilenen ve düzeni sağlamakla görevli kimse'},
+    {word: 'Mucahid', meaning: 'Cihad eden'},
+    {word: 'Mugalyanuzar', meaning: 'Güzel kokan çiçek'},
+    {word: 'Muğber', meaning: 'Güvenlik'},
+    {word: 'Muğber', meaning: 'Kırgın, küskün, gücenmiş, darılmış.'},
+    {word: 'Muhacir', meaning: 'Mekke\'den Medine\'ye göç edenler'},
+    {word: 'Muhakkar', meaning: 'Hakir görülen, hakarete uğramış.'},
+    {word: 'Muhal', meaning: 'Mümkün olmayan, olamaz, imkânsız, olanaksız.'},
+    {word: 'Muhalif', meaning: 'Aykırı'},
+    {word: 'Muhammer Tıynet', meaning: 'Yoğrulmuş maya'},
+    {word: 'Muharrem', meaning: 'Ay takvimin birinci ayı, aşure ayı'},
+    {word: 'Muhassıl', meaning: 'Husule getiren, hâsıl eden, meydana getiren.'},
+    {word: 'Muhat', meaning: 'Etrafı çevrilmiş. Etrafı kuşatılan. Bir şey içinde bulunan.'},
+    {word: 'Muhit', meaning: 'Çevre'},
+    {word: 'Muhit-i ilim', meaning: 'İlmi çevre'},
+    {word: 'Muhkem', meaning: 'Sağlam, sağlamlaştırılmış, kuvvetli.'},
+    {word: 'Muhtasar', meaning: 'Kısa, özet, az.'},
+    {word: 'Muhtefi', meaning: 'Gizlenen, saklı, gizli.'},
+    {word: 'Muhterem', meaning: 'Saygıdeğer, hürmete layık.'},
+    {word: 'Mukabil', meaning: 'Karşılık'},
+    {word: 'Mukaddes', meaning: 'Her türlü çirkinlik ve eksiklikten arınmış, kutsal'},
+    {word: 'Mukallid', meaning: 'Taklitçi, taklid eden, başkasına özenerek onun gibi olmaya çalışan'},
+    {word: 'Mukarrer', meaning: 'Kararlaşmış, kesinlik kazanmış; hakkında şüphe olmayan mesele.'},
+    {word: 'Mukassı', meaning: 'Kasvet veren, sıkıntılı, kasvetli. Sıkıcı, dar.'},
+    {word: 'Muktadas', meaning: 'Örnekler'},
+    {word: 'Muktedir', meaning: 'İktidar sahibi'},
+    {word: 'Munis', meaning: 'Alışılmış. Ehlileşmiş. Cana yakın. Sevimli.'},
+    {word: 'Murad ı evvel', meaning: 'Osmanlı padişahı'},
+    {word: 'Murad ın', meaning: 'Birinci Murad, metin kuvvetli sağlam'},
+    {word: 'Murdar', meaning: 'Pis. Kirli. Mülevves. Temiz olmayan.'},
+    {word: 'Musahabe', meaning: 'Görüşme, konuşma, söyleşi, sohbet'},
+    {word: 'Muhasebede', meaning: 'Röportaj'},
+    {word: 'Musanlar', meaning: 'Sanat'},
+    {word: 'Musıki', meaning: 'Müzik'},
+    {word: 'Musıki-şinas', meaning: 'Müzikle uğraşan'},
+    {word: 'Musin', meaning: 'Yaşlı, ihtiyarlamış'},
+    {word: 'Musubet', meaning: 'Olumsuz'},
+    {word: 'Mutad', meaning: 'Alışılmış'},
+    {word: 'Mutarna', meaning: 'Taravetli, taze'},
+    {word: 'Mutassıl', meaning: 'Beraber'},
+    {word: 'Mutefelsit', meaning: 'Filozof kesilmek'},
+    {word: 'Muteval-i Leyal', meaning: 'Sürekli uzayan'},
+    {word: 'Muvaffak', meaning: 'Başarılı'},
+    {word: 'Muvaffakiyet', meaning: 'Başarı, başarmak'},
+    {word: 'Muzdim', meaning: 'Karanlık, dehşetli'},
+    {word: 'Muzi', meaning: 'Aydınlık, ışık veren, parlak'},
+    {word: 'Muztar', meaning: 'Zorlanmış. Cebr olunmuş. Mecbur kalış. Çaresiz kalıp başı sıkılan.'},
+    {word: 'Mübdiane', meaning: 'Zorunlu'},
+    {word: 'Mübhem', meaning: 'İyice belli olmayan, belirsizlik, gizli'},
+    {word: 'Mübin', meaning: 'Kötüyle iyiyi ayıran'},
+    {word: 'Mücadele', meaning: 'Savaş'},
+    {word: 'Mücaz', meaning: 'Câiz görülmüş, yapılabilir, uygun ve muvafık görülmüş.'},
+    {word: 'Müctehid', meaning: 'İslam hukuk alimi, Âyet ve hadîslerden hüküm çıkaran büyük âlim.'},
+    {word: 'Müderris', meaning: 'Medrese ya da camilerde ders veren âlim, hoca.'},
+    {word: 'Müdrik', meaning: 'Bilge'},
+    {word: 'Müebbed', meaning: 'ebedi'},
+    {word: 'Müedda', meaning: 'Manasız anlam, mefhum, kavram.'},
+    {word: 'Müemad', meaning: 'Sürekli'},
+    {word: 'Müessese', meaning: 'Kurum'},
+    {word: 'Müeyyed', meaning: 'Doğrulanmış, sağlam'},
+    {word: 'Müfekkire', meaning: 'Düşünme gücü ve kuvveti.'},
+    {word: 'Mühim', meaning: 'Önemli'},
+    {word: 'Mükendidir', meaning: 'Boyun eğen'},
+    {word: 'Mülahazanyan', meaning: 'Düşünce'},
+    {word: 'Mülazım', meaning: 'Bir kimseye bağlı gibi olan, maaşsız acemilik hizmeti.'},
+    {word: 'Mülevves', meaning: 'Kirli, pis, bulaşık.'},
+    {word: 'Mülk', meaning: 'Vakıf olmayan, doğrudan doğruya birinin malı olan yer ya da yapı'},
+    {word: 'Mültecir', meaning: 'Sığınan'},
+    {word: 'Müncel', meaning: 'Şimdiki versiyon'},
+    {word: 'Müncezib', meaning: 'Beriye çekilen, cezbedilen. İncizab eden.'},
+    {word: 'Mündemic', meaning: 'Dürülüp sarılan, içine sokulmuş olan. İçine alınmış olan.'},
+    {word: 'Mündeşir', meaning: 'Dehşet içinde kalmış plan'},
+    {word: 'Münevvim', meaning: 'Uyutucu. Uyku veren ilâç.'},
+    {word: 'Münhasır', meaning: 'Belli bir sınır içinde olup harice tecavüz etmeyen, inhisar eden, her yanı çevrili.'},
+    {word: 'Münkesir', meaning: 'Kırılmış, kırık.'},
+    {word: 'Müphem', meaning: 'Kapalı, örtülü, belirsiz.'},
+    {word: 'Mürde', meaning: 'Ölmüş kişi, ölü.'},
+    {word: 'Mürted', meaning: 'Müslüman iken dinden çıkan, kâfir olan kimse.'},
+    {word: 'Müsamere', meaning: 'Mekteplerde talebelerin oynadıkları piyes.'},
+    {word: 'Müsangar', meaning: 'Küçük, küçücük'},
+    {word: 'Müsarf', meaning: 'Saçan, su veren'},
+    {word: 'Müslih', meaning: 'Islah eden. İyileştiren. Terbiye edici.'},
+    {word: 'Müstagrak', meaning: 'Kendini bilmeyecek derecede dalgın olan.'},
+    {word: 'Müstağrak', meaning: 'Gark olmuş, dalmış, batmış.'},
+    {word: 'Müstahil', meaning: 'İmkânsız, olmayacak şey. Boş.'},
+    {word: 'Müstakbel', meaning: 'İleri bir tarihte beklenen, gelecekteki'},
+    {word: 'Müstakbele', meaning: 'gelecek'},
+    {word: 'Müstarfil', meaning: 'Dil döken'},
+    {word: 'Müşeyyed', meaning: 'Yüksek ve sağlam, metin yapılı, kuvvetlendirilmiş, sağlamlaştırılmış.'},
+    {word: 'Müşfik', meaning: 'Şefkatle seven. Acıyan, merhametli.'},
+    {word: 'Müşkil', meaning: 'Zorluk, güçlük, zor olan iş. Çetinlik.'},
+    {word: 'Müştak', meaning: 'Çok isteyen, can atan.'},
+    {word: 'Mütad', meaning: 'Alışılmış'},
+    {word: 'Mütavartı', meaning: 'Yalvarmak'},
+    {word: 'Mütedenni', meaning: 'Tedenni eden, gerileyen, aşağılanan.'},
+    {word: 'Mütefen', meaning: 'Becerikli'},
+    {word: 'Müteffekir', meaning: 'Düşünür'},
+    {word: 'Müteheyyic', meaning: 'Heyecanlı'},
+    {word: 'Mütemadı', meaning: 'Aralıksız, sürekli'},
+    {word: 'Mütendid', meaning: 'Ordan'},
+    {word: 'Müteveffa', meaning: 'Ölü, vefat etmiş, ölmüş.'},
+    {word: 'Mütevekkil', meaning: 'Tevekkül eden.'},
+    {word: 'Müvekkel', meaning: 'Birinin yerine görevlendirilmiş kimse.'},
+    {word: 'Müverrin', meaning: 'Tarihçi'},
+    {word: 'Müzevvir', meaning: 'Yalancı, dolandırıcı, arabozucu.'}
+];
+
+dictionaryData['N'] = [
+    {word: 'Naagd', meaning: 'Para'},
+    {word: 'Naaş', meaning: 'Ceset'},
+    {word: 'Naçar', meaning: 'Çaresi olmayan, çaresiz'},
+    {word: 'Nadan', meaning: 'Bilgisiz, cahil, hödük.'},
+    {word: 'Naf', meaning: 'Göbek, orta.'},
+    {word: 'Naf-ı asar', meaning: 'Faydalı eserler'},
+    {word: 'Naga', meaning: 'Vakitsiz'},
+    {word: 'Na-hak', meaning: 'Haksız, beyhude, boş.'},
+    {word: 'Nakkad', meaning: 'Tenkidci, bir şeyin iyisini kötüsünü ayıran.'},
+    {word: 'Nale', meaning: 'İnleyip, sızlamak, inilti, feryat.'},
+    {word: 'Nale-sera', meaning: 'Son akşam'},
+    {word: 'Nam', meaning: 'İsim, ad. Lâkab. Ün. Şan.'},
+    {word: 'Na-mahdud', meaning: 'Sınırsız, hudutsuz'},
+    {word: 'Na-mahrem', meaning: 'Mahrem olmayan; kendisi ile evlenilmesi haram olmayan.'},
+    {word: 'Namdar', meaning: 'Ünlü, şöhretli, meşhur.'},
+    {word: 'Na-mütenahi', meaning: 'Sınırsız, sonsuz, engin.'},
+    {word: 'Namzet', meaning: 'Aday'},
+    {word: 'Na-peyda', meaning: 'Belirsiz'},
+    {word: 'Nara', meaning: 'Yüksek sesle bağırma, haykırma.'},
+    {word: 'Nas', meaning: 'Halk, insanlar'},
+    {word: 'Nasara', meaning: 'Hristiyanlar. Nasraniler.'},
+    {word: 'Nasiye', meaning: 'Çehrenin gösterişi, alın, yüz.'},
+    {word: 'Nasula', meaning: 'İnsanın beşeri yönü'},
+    {word: 'Nasüt', meaning: 'İnsanlık. İnsanlar ve onlarla alâkalı şeyler.'},
+    {word: 'Nazar', meaning: 'Bakış, görüş, göz değmesi.'},
+    {word: 'Nazariyat', meaning: 'Kitabî bilgiler, görüşler, ispatlanmamış düşünceler.'},
+    {word: 'Naze', meaning: 'Cilveli, nazlı'},
+    {word: 'Nazele', meaning: 'Yüzsüz'},
+    {word: 'Nazenin', meaning: 'İnce yapılı, cilveli, edalı.'},
+    {word: 'Nebat', meaning: 'Bitki, Yemen diyarında bir kabile adı.'},
+    {word: 'Nebi', meaning: 'Tanrının buyruklarını ileten onları aydınlatan kimse, peygamber'},
+    {word: 'Nebiyy-i masum', meaning: 'Masum kimseler'},
+    {word: 'Necat', meaning: 'Kurtuluş, selamet.'},
+    {word: 'Necib', meaning: 'Soylu, cömert, kerim kişi.'},
+    {word: 'Necm', meaning: 'Yıldız'},
+    {word: 'Nedamet', meaning: 'Pişmanlık, nedâmet etmek.'},
+    {word: 'Nefer', meaning: 'Er'},
+    {word: 'Nefh', meaning: 'Güzel kokunun yayılması. Kokmak.'},
+    {word: 'Nefha', meaning: 'Esme, esinti, üfürük.'},
+    {word: 'Nef-i Şahsi', meaning: 'Kişilik'},
+    {word: 'Nefrin', meaning: 'Lanet, nefret, beddua.'},
+    {word: 'Nefs', meaning: 'Ruh, hayat, asıl. Bedenin hissi istekleri.'},
+    {word: 'Nehar', meaning: 'Gündüz'},
+    {word: 'Nehy', meaning: 'Yasaklama, yasak edilen şey.'},
+    {word: 'Nekalin', meaning: 'İşkence'},
+    {word: 'Nekbet', meaning: 'Felaket. Talihsizlik, şanssızlık, bahtsızlık.'},
+    {word: 'Nescid', meaning: 'Mısralar'},
+    {word: 'Nesim', meaning: 'Hoş ve hafif rüzgâr.'},
+    {word: 'Nesim-i safa', meaning: 'Açık havadaki ayaz rüzgâr.'},
+    {word: 'Nesrin', meaning: 'Yaban gülü.'},
+    {word: 'Neşet', meaning: 'Meydana gelme, çıkma.'},
+    {word: 'Neşide', meaning: 'Manzume. Şiir.'},
+    {word: 'Neşr', meaning: 'Yayma, dağıtma.'},
+    {word: 'Neva', meaning: 'Ahenk, ses, güzel sadâ, nağme, avaz.'},
+    {word: 'Nev-bahar', meaning: 'İlkbahar.'},
+    {word: 'Nevbet', meaning: 'Nöbet. Sıra ile görülen iş.'},
+    {word: 'Nevha', meaning: 'Ölüye sesli ağlamak, ağıt'},
+    {word: 'Neviye', meaning: 'Torun'},
+    {word: 'Nevmid', meaning: 'Ümidsiz, me\'yus, mükedder, cesareti kırılmış.'},
+    {word: 'Nezir', meaning: 'Korkutan, cezayı haber veren.'},
+    {word: 'Nidâ', meaning: 'Ses, seslenme, sesleniş.'},
+    {word: 'Nifak', meaning: 'Müslüman gibi görünüp kâfir olmak. İki yüzlülük.'},
+    {word: 'Nigah', meaning: 'Bakmak, nazar etmek. Bakış.'},
+    {word: 'Nigah-ı ibret', meaning: 'İbretli bakış'},
+    {word: 'Nigeh-ban', meaning: 'Gözcü, bekçi.'},
+    {word: 'Niha', meaning: 'Yas tutmak.'},
+    {word: 'Nihan', meaning: 'Gizli, saklı. Bulunmayan. Mevcut olmayan.'},
+    {word: 'Nim', meaning: 'Yarım, nısf, buçuk, yarı.'},
+    {word: 'Nira', meaning: 'Cehennem'},
+    {word: 'Nisar', meaning: 'Saçmak, dağıtmak.'},
+    {word: 'Nisbetiye', meaning: 'Bağlantısı olmak, ilgisi olmak'},
+    {word: 'Nişane', meaning: 'Alâmet, işaret, iz.'},
+    {word: 'Nitak', meaning: 'Kuşak, kemer'},
+    {word: 'Niyaz', meaning: 'Dilek, yalvarma, dua.'},
+    {word: 'Nukus', meaning: 'Resimler, nakışlar.'},
+    {word: 'Numüne', meaning: 'Örnek'},
+    {word: 'Nur-ı Nazar', meaning: 'Bakışın ışığı'},
+    {word: 'Nur-ı Uluhiyet', meaning: 'İlahi ışık'},
+    {word: 'Nur-i Didan', meaning: 'Nur yüzlü'},
+    {word: 'Nusret', meaning: 'Zafer için yardım.'},
+    {word: 'Nuş', meaning: 'Tatlı şerbet gibi içilecek şey.'},
+    {word: 'Nübüvvet', meaning: 'Peygamberlik, nebi olmak, nebilik.'},
+    {word: 'Nücum', meaning: 'Yıldızlar'},
+    {word: 'Nükhet', meaning: 'Koku'},
+    {word: 'Nümayan', meaning: 'Görünen, aşikâr olan, gözükücü olan. Parlayan.'},
+    {word: 'Nümayiş', meaning: 'Görünüş, gösteriş, dış görünüş. Gösteri.'},
+    {word: 'Nüsha', meaning: 'Dualı kağıt, sahife, yazılı şey.'},
+    {word: 'Nüşur', meaning: 'Yaymalar, dağıtmalar.'}
+];
+
+dictionaryData['P'] = [
+    {word: 'Pâdişâh-ı şehid', meaning: 'Şehit, hükümdar'},
+    {word: 'Pâk', meaning: 'Temiz, saf, katıksız. Hep, tamam, mübarek, kudsi.'},
+    {word: 'Paki şerin', meaning: 'Temiz'},
+    {word: 'Pâkin', meaning: 'Her türlü kötülükten veya günahtan uzak duran, temiz kişi'},
+    {word: 'Pakine', meaning: 'Ayrıca'},
+    {word: 'Pamal', meaning: 'Pullu sürüngenler, kobragiller'},
+    {word: 'Pâmel', meaning: 'Ezilmek, çiğnenmek.'},
+    {word: 'Pansör', meaning: 'Hür, düşünceli'},
+    {word: 'Pare', meaning: 'Cüz, parça. Kesinti.'},
+    {word: 'Pâyimâl', meaning: 'Çiğnenmiş, ayak altına alınmış.'},
+    {word: 'Penahun', meaning: 'Sığınak'},
+    {word: 'Per-dar', meaning: 'Asılmış, yukarı kaldırılmış.'},
+    {word: 'Perde-i esrar', meaning: 'Sırlar perdesi'},
+    {word: 'Perde-i zulmet', meaning: 'Zulüm perdesi'},
+    {word: 'Perran', meaning: 'Uçan, uçucu.'},
+    {word: 'Perüka', meaning: 'Berber'},
+    {word: 'Pervaz', meaning: 'Uçmak, kanat açmak.'},
+    {word: 'Pesman', meaning: 'Dökülen, arta kalan'},
+    {word: 'Peya', meaning: 'Rütbe'},
+    {word: 'Peyâm-ı vedad', meaning: 'Dostluk haberi'},
+    {word: 'Peyanun', meaning: ''},
+    {word: 'Peyda', meaning: 'Mevcud, var olan, açık, âşikâr, meydanda olan.'},
+    {word: 'Peyderpey', meaning: 'Art arda'},
+    {word: 'Peyle', meaning: 'Eski kahvelerde ve evlerde duvara bitişik kerevet ve sedir'},
+    {word: 'Peyma', meaning: 'Yol alan, kateden, ölçen.'},
+    {word: 'Peyman', meaning: 'And, yemin, muahede, ahitleşmek.'},
+    {word: 'Peymâne', meaning: 'Büyük kadeh.'},
+    {word: 'Peytan', meaning: 'Bir alayı günlerce misafir eden'},
+    {word: 'Pıra', meaning: 'Süsleyici, düzenleyici, donatıcı.'},
+    {word: 'Pış', meaning: 'Huzur, ön, ileri taraf.'},
+    {word: 'Pinhan', meaning: 'Gizli, saklı, hafi, mahfi, mestur, müstetir.'},
+    {word: 'Pir', meaning: 'Yaşlı, ihtiyar.'},
+    {word: 'Pira', meaning: 'Süsleyici, düzenleyici, donatıcı.'},
+    {word: 'Piraye', meaning: 'Zinet. Süs.'},
+    {word: 'Pişgah', meaning: 'Ön. Huzur, huzurunda'},
+    {word: 'Pişi', meaning: 'Önünü gören, ileri görüşlü.'},
+    {word: 'Pomak', meaning: 'İslav kökenli Müslüman topluluk'},
+    {word: 'Prizerin', meaning: ''},
+    {word: 'Protestan', meaning: 'Hristiyanlıkta reform yapılmasını isteyen, buna çalışan bir akım sonucu doğmuş olan mezhep'},
+    {word: 'Pür', meaning: 'Çok, dolu, çok fazla, memlu, tekrar'}
+];
+
+dictionaryData['R'] = [
+    {word: 'Ra\'şedar', meaning: 'Titreyen,ürken'},
+    {word: 'Rab', meaning: 'Tanrı'},
+    {word: 'Rabıta', meaning: 'İlgi,münasebet,bağlılık,mensupluk'},
+    {word: 'Raci', meaning: 'Geri dönen'},
+    {word: 'Rahle-i tedkik', meaning: 'Araştırma masası'},
+    {word: 'Rahmet-i Mevla', meaning: 'Allahın merhameti'},
+    {word: 'Rahş', meaning: 'Yıkamak'},
+    {word: 'Rakik', meaning: 'İnce'},
+    {word: 'Raşe', meaning: 'Titreme'},
+    {word: 'Re\'y', meaning: 'Görme'},
+    {word: 'Reca', meaning: 'Ümit,istek,arzu'},
+    {word: 'Refref', meaning: 'Kanat çırpmak'},
+    {word: 'Reh-güzarında', meaning: 'Geçit,yol üstü'},
+    {word: 'Rehmetullah', meaning: 'Allahın rahmeti'},
+    {word: 'Rehzen', meaning: 'Yol kesen,haydut,eşkiya'},
+    {word: 'Rencide', meaning: 'Kırılmış,incinmiş'},
+    {word: 'Reng-i giva', meaning: 'Başka renk'},
+    {word: 'Reng-i Hüvviyet', meaning: 'Özgünlük'},
+    {word: 'Reng-i Şule-i berk', meaning: 'Şimşek ışığının rengi'},
+    {word: 'Reng-i zilal', meaning: 'Gölgeli renk'},
+    {word: 'Revak', meaning: 'Kemer,kubbe,çardak'},
+    {word: 'Revzen', meaning: 'pencere'},
+    {word: 'Reyb', meaning: 'Şüphe,tereddüt'},
+    {word: 'Rezil akıbet', meaning: 'Kötü sonuç'},
+    {word: 'Riayet', meaning: 'Saygı gösterme'},
+    {word: 'Ric\'at', meaning: 'Geri dönme ,kaçış'},
+    {word: 'Rical-i berhurdar', meaning: 'Mesut adamlar'},
+    {word: 'Rida', meaning: 'Örtü,şal'},
+    {word: 'Rikkat', meaning: 'Acıma,incelik,yufka yüreklilik,yumuşaklık'},
+    {word: 'Ru\'numun', meaning: 'Ortaya çıkan'},
+    {word: 'Ruh', meaning: 'Nefes'},
+    {word: 'Ruh-ı ecdad', meaning: 'Ataların ruhu'},
+    {word: 'Ruh-ı edyan', meaning: 'Dinlerin aslı'},
+    {word: 'Ruh-ı feyyaz', meaning: 'Bereket ve bolluk veren'},
+    {word: 'Ruh-ı İblis', meaning: 'Şeytanın ruhu'},
+    {word: 'Ruh-ı lain', meaning: 'Lanetli ruh'},
+    {word: 'Ruh-ı sema', meaning: 'Huzur ve dinginlik'},
+    {word: 'Ruku', meaning: 'Namazda eğilmek'},
+    {word: 'Ru-numa', meaning: 'Yüz gösteren'},
+    {word: 'Rücu', meaning: 'Geri dönme,dönüş'}
+];
+
+dictionaryData['S'] = [
+    {word: 'Sa\'det', meaning: '1.Arzuların tatmin edilmesinden kaynaklanan durum. 2. Mutluluk.'},
+    {word: 'Sa\'di', meaning: 'Uğur ve mutlulukla ilgili, uğurlu.'},
+    {word: 'Sa\'y', meaning: '1.Çalışma. 2.Hacda sefa ile merve arasında yedi defa gidip gelmek.'},
+    {word: 'Sa\'y-i beliğ', meaning: '1. Emek harcayarak gereği gibi çalışma. 2. Güzel, düzgün söz söyleyen.'},
+    {word: 'Saba', meaning: '1.Sabah yeli. 2.Klasik Türk müziğinde bir birleşik makam.'},
+    {word: 'Sabme', meaning: 'Vuruşma, çarpışma, sarsıntı.'},
+    {word: 'Sadâ', meaning: '1. Ses. 2. Erkek baykuş. 3.Bir böcek adı.'},
+    {word: 'Sadakat', meaning: '1.Sadakalar. 2. Dostluk, bağlılık.'},
+    {word: 'Sadda', meaning: '1.Suyu lezzetli olan örülmüş kuyu. 2.Örten, kapayan.'},
+    {word: 'Sadme', meaning: 'Çarpışma, vurma.'},
+    {word: 'Sadr', meaning: 'Göğüs.'},
+    {word: 'Sadr-ı İslam', meaning: 'İslam\'ın göğsü.'},
+    {word: 'Sâfâ', meaning: 'Gönül rahatlığı, huzur.'},
+    {word: 'Saffet', meaning: '1. Saflık, temizlik, arılık. 2. Üstün güç.'},
+    {word: 'Safvet-i ruh', meaning: 'Ruh temizliği.'},
+    {word: 'Saha', meaning: 'Alan.'},
+    {word: 'Sahabe', meaning: 'Sahipler, sahip çıkanlar.'},
+    {word: 'Saha-i tatbik', meaning: 'Uygulama sahası.'},
+    {word: 'Sahib-kıran', meaning: 'Her zaman başaran hükümdar.'},
+    {word: 'Sahne-i decur', meaning: 'Karanlık sahne.'},
+    {word: 'Sahn-ı üryan', meaning: 'Çıplak alan.'},
+    {word: 'Sahra', meaning: 'Çöl.'},
+    {word: 'Sail', meaning: '1. Sual eden, soran. 2. Dilenci. 3. Denize açılmak.'},
+    {word: 'Saire', meaning: 'Diğer.'},
+    {word: 'Sakf', meaning: 'Dam, çatı, tavan, gökyüzü, sema.'},
+    {word: 'Sâkin', meaning: 'Hareketsiz, kendi halinde, yalın.'},
+    {word: 'Sal- hurde', meaning: 'Yıllanmış, yaşlı.'},
+    {word: 'Sâl', meaning: 'yıl'},
+    {word: 'Salâh', meaning: 'İyilik, rahatlık, sulh, iyileşme.'},
+    {word: 'Salahiyet- dar', meaning: 'Yetkili.'},
+    {word: 'Salat', meaning: 'Namaz.'},
+    {word: 'Salib', meaning: 'Haç, haçlı.'},
+    {word: 'Salka', meaning: 'Çuha, kadife, sırma gibi kumaşlardan yapılan kollu cepken.'},
+    {word: 'Saltanat', meaning: 'Hükümdarlık.'},
+    {word: 'Samimi', meaning: 'Öz, asıl.'},
+    {word: 'Samit', meaning: 'Sessiz.'},
+    {word: 'Samt', meaning: 'Susma.'},
+    {word: 'Samte', meaning: 'Sessizlik.'},
+    {word: 'San\'at', meaning: '1. Her şeyi mükemmel bir şekilde yaratan Allah\'ın yüceliği. 2. Ortaya konulan üstün yaratıcılık.'},
+    {word: 'Sarban', meaning: 'Deveci.'},
+    {word: 'Sarık', meaning: 'Kavuk, fes.'},
+    {word: 'Satveti', meaning: 'Ezici güç.'},
+    {word: 'Savaik', meaning: 'Yıldırımlar.'},
+    {word: 'Savlet', meaning: 'Hamle, hücum, saldırma.'},
+    {word: 'Sayan-ı merhamet', meaning: 'Acınmaya layık.'},
+    {word: 'Saye', meaning: 'Gölge.'},
+    {word: 'Saye-i nur', meaning: 'Nurlu gölge.'},
+    {word: 'Sayha', meaning: 'Feryat, çığlık.'},
+    {word: 'Sebad', meaning: 'Kararlı olma durumu.'},
+    {word: 'Sebat', meaning: 'Sabırlı olmak.'},
+    {word: 'Sebil', meaning: 'Su dağıtılan çeşme.'},
+    {word: 'Sefilân', meaning: 'Sefiller.'},
+    {word: 'Sefilâne', meaning: 'Alçak bir haldeki yaşam.'},
+    {word: 'Sehabe-i nur', meaning: 'Işıktan bir bulut.'},
+    {word: 'Sehabiyye', meaning: 'Bulut .'},
+    {word: 'Sekrân', meaning: 'Sarhoşlar.'},
+    {word: 'Selamet', meaning: 'Kurtuluş.'},
+    {word: 'Selef', meaning: 'Öncekiler.'},
+    {word: 'Sema', meaning: '1. Gök, gökyüzü, Allah katı. 2. Mevlevi ayin dönüşü.'},
+    {word: 'Seng', meaning: 'Taş.'},
+    {word: 'Seng-i cânid', meaning: 'Donuk taş.'},
+    {word: 'Seng-pâre', meaning: 'Taş parçası.'},
+    {word: 'Ser- nigun', meaning: 'Baş aşağı.'},
+    {word: 'Serab', meaning: 'Çölde uzaktan su ve yeşillik gibi görünen ışık yanıltması.'},
+    {word: 'Serâb', meaning: 'Şaşkın hale gelme.'},
+    {word: 'Serair', meaning: 'Sırlar.'},
+    {word: 'Serapa', meaning: 'Bütün olarak, tümüyle.'},
+    {word: 'Serdar', meaning: 'Komutan.'},
+    {word: 'Serir', meaning: 'Tahta karyola, kürsü, taht.'},
+    {word: 'Serir-i âlâ', meaning: 'Yücelik tahtı.'},
+    {word: 'Sermedi', meaning: 'Daimi, ebedi, sürekli.'},
+    {word: 'Sermediyet', meaning: 'Daimilik, ebedilik.'},
+    {word: 'Servistan', meaning: 'Servi bahçesi.'},
+    {word: 'Setre', meaning: 'Örtü, perde.'},
+    {word: 'Setre-i bitab', meaning: 'Zayıf örtü.'},
+    {word: 'Sevad', meaning: 'Siyahlar, karalar.'},
+    {word: 'Sevâhil', meaning: 'Kıyılar.'},
+    {word: 'Seyf', meaning: 'Kılıç,pala.'},
+    {word: 'Seyr', meaning: 'Gidilen yol, yürüyüş.'},
+    {word: 'Seyyah', meaning: 'Gezgin.'},
+    {word: 'Seyyal', meaning: 'Akan.'},
+    {word: 'Seyyale', meaning: 'Akış.'},
+    {word: 'Seyyie', meaning: 'Günah, kötülük, çirkin iş.'},
+    {word: 'Sıddık', meaning: 'Gerçekçi, dürüst ve güvenilir olma.'},
+    {word: 'Sıyanet', meaning: 'Koruma.'},
+    {word: 'Sima', meaning: 'Yüz, çehre.'},
+    {word: 'Simsar', meaning: 'Komisyoncu.'},
+    {word: 'Sin', meaning: 'Gömüt, mezar.'},
+    {word: 'Sinâ', meaning: '1. Güçlü, kararlı. 2. Sabırlı. 3. Başkaların karşı nazik ve hoşgörülü.'},
+    {word: 'Sine- çâk', meaning: 'Yürek parçalayan.'},
+    {word: 'Sine', meaning: 'Göğüs, gönül, kalp.'},
+    {word: 'Sine-i millet', meaning: 'Milletin gönlü.'},
+    {word: 'Sine-i münevver', meaning: 'Aydınlık kucak.'},
+    {word: 'Sipah', meaning: 'Osmanlı ordusunun ağır süvari sınıf askeri.'},
+    {word: 'Sipahi', meaning: 'Asker.'},
+    {word: 'Sirac-ı ezel', meaning: 'Ezeli ışık.'},
+    {word: 'Sirayet', meaning: 'Bulaşma.'},
+    {word: 'Sivar', meaning: 'Bileşik.'},
+    {word: 'Siyak', meaning: 'Söz gelişi, anlatım biçimi.'},
+    {word: 'Sual', meaning: 'Soru.'},
+    {word: 'Subat', meaning: 'Uzun uyku biçiminde baygınlık, koma, dalgınlık, uyku.'},
+    {word: 'Subh', meaning: 'Sabah.'},
+    {word: 'Subh-dem', meaning: 'Sabah vakti.'},
+    {word: 'Sufuf', meaning: 'Sıralar, saflar, diziler.'},
+    {word: 'Sulh', meaning: 'Barış.'},
+    {word: 'Sun', meaning: 'Sanat, tesir, etki.'},
+    {word: 'Suziş', meaning: 'Yakma, yanma, etkileme.'},
+    {word: 'Suz-u güdaz', meaning: 'Yanıp yakınmalar.'},
+    {word: 'Sücud', meaning: 'Secdeler.'},
+    {word: 'Sükun', meaning: 'Durgun.'},
+    {word: 'Sükut', meaning: 'Susturmak, sessizlik, sakinlik'},
+    {word: 'Süngü', meaning: 'Tüfek namlusunun ucuna takılan delici silah.'},
+    {word: 'Sürat', meaning: 'Hız.'},
+    {word: 'Sürud-ı ümit', meaning: 'Ümit şarkısı.'},
+    {word: 'Sürur', meaning: 'Sevinçli.'},
+    {word: 'Süveydâ', meaning: 'Kalbin siyah noktası, kalpteki basiret ve idrak merkezi, ilahi aşkın tecelli ettiği yer.'}
+];
+
+dictionaryData['Ş'] = [
+    {word: 'Şah-ı şehid', meaning: 'Şehitlerin şahı.'},
+    {word: 'Şahika', meaning: 'Zirve.'},
+    {word: 'Şaki', meaning: 'Eşkıya, haydut.'},
+    {word: 'Şap', meaning: 'Bir hastalık ismi.'},
+    {word: 'Şark', meaning: 'Doğu.'},
+    {word: 'Şayak', meaning: 'Kaba dokunmuş yün kumaş.'},
+    {word: 'Şayan', meaning: 'Uygun.'},
+    {word: 'Şayeste', meaning: 'Yaraşır, layık, uygun.'},
+    {word: 'Şeb- nisar', meaning: 'Dağınık gece.'},
+    {word: 'Şebab', meaning: 'Gençler.'},
+    {word: 'Şebb', meaning: 'Genç.'},
+    {word: 'Şebistan', meaning: 'Yatak odası.'},
+    {word: 'Şedâid', meaning: 'Şiddetler.'},
+    {word: 'Şedait-i eyyam', meaning: 'Hayatın sıkıntısı.'},
+    {word: 'Şedid', meaning: 'Şiddetli, büyük bela.'},
+    {word: 'Şehadet', meaning: 'Tanıklık, şehitlik.'},
+    {word: 'Şehamet', meaning: 'Yiğitlik, cesaret, bir kişinin veya bir şeyin korunması ve savunulması.'},
+    {word: 'Şehbal', meaning: 'Kuş kanadında bulunan en uzun tüy, kanat.'},
+    {word: 'Şehidan', meaning: 'Şehitlik.'},
+    {word: 'Şehr', meaning: 'Şehir.'},
+    {word: 'Şekl-i muhiş', meaning: 'Korkunç şekil.'},
+    {word: 'Şems', meaning: 'Güneş.'},
+    {word: 'Şenâ', meaning: 'Övgü, övme.'},
+    {word: 'Şenâ\'at', meaning: 'Alçaklık, iğrençlik, kötülük.'},
+    {word: 'Şer\'ar', meaning: 'Savaşçı.'},
+    {word: 'Şer\'i', meaning: 'Dini kurallar.'},
+    {word: 'Şerait', meaning: '1. Şartlar, koşullar. 2. İslam hukuku.'},
+    {word: 'Şetaret', meaning: 'Sevinç, neşe.'},
+    {word: 'Şevk', meaning: 'İstek, arzu.'},
+    {word: 'Şevket', meaning: 'Görkem, güç, büyüklük.'},
+    {word: 'Şevket-meab', meaning: 'Şevketin, büyüklüğün bulunduğu yer.'},
+    {word: 'Şi\'r', meaning: 'Anlama, sırra erme.'},
+    {word: 'Şiar', meaning: '1. Ayırıcı özellik, alamet, iz. 2. Tutulacak yol, ülkü, ilke.'},
+    {word: 'Şikar', meaning: 'Av, avlanan hayvan.'},
+    {word: 'Şilte', meaning: 'Döşek.'},
+    {word: 'Şimal', meaning: 'Kuzey.'},
+    {word: 'Şitab', meaning: 'Acele etmek.'},
+    {word: 'Şiven', meaning: 'Yas, matem.'},
+    {word: 'Şu\'â-ı muhriki', meaning: 'Yakıcı ışın.'},
+    {word: 'Şu\'un', meaning: 'İşler, fiiller.'},
+    {word: 'Şua', meaning: 'Işın.'},
+    {word: 'Şule', meaning: 'Aydınlık.'},
+    {word: 'Şumus', meaning: 'Güneşler.'},
+    {word: 'Şüheda', meaning: 'Şehitler.'},
+    {word: 'Şüride', meaning: 'Perişan, karışık.'}
+];
+
+dictionaryData['T'] = [
+    {word: 'Ta\'ayyün', meaning: 'Görünmek, ortaya çıkmak.'},
+    {word: 'Tab', meaning: 'Efkâr basma işi.'},
+    {word: 'Tabi', meaning: 'kesinlikle, doğal olarak'},
+    {word: 'Tabi\'', meaning: 'Doğal.'},
+    {word: 'Tabib', meaning: 'Doktor.'},
+    {word: 'Ta\'dâd', meaning: 'Sayma.'},
+    {word: 'Tafsil', meaning: 'Bir şeyi ayrıntılarına girerek açıklama, ayrıntılı, açık, uzun anlatmak.'},
+    {word: 'Tağyir', meaning: 'Başkalaştırma, değiştirme, bozma.'},
+    {word: 'Taharet', meaning: 'Temizlik, nezafet.'},
+    {word: 'Tahattur', meaning: 'Hatırlatma.'},
+    {word: 'Tahayyür', meaning: 'Şaşırma.'},
+    {word: 'Tahlîs', meaning: 'Kurtarma, halas etmek.'},
+    {word: 'Tahrir-i nüfus', meaning: 'Nüfus kaydı.'},
+    {word: 'Takat', meaning: 'Dayanma, güç, katlanma, derman.'},
+    {word: 'Taklid', meaning: 'Düşünmeden bir başkasına uymak.'},
+    {word: 'Taksim', meaning: 'Parçalama, ayırma, bölme.'},
+    {word: 'Takyid', meaning: '1. Bir mülkün üzerinde herhangi bir şehrin veya borcun olup olmadığını gösteren tapudan alınan bilgi. 2. Kaydetme.'},
+    {word: 'Tamik', meaning: 'Derinleştirme.'},
+    {word: 'Tanin-i medid', meaning: 'Çanakta uzun bir çınlama.'},
+    {word: 'Tar', meaning: '1. Saç teli. 2. Karanlık.'},
+    {word: 'Tarik', meaning: 'Yol.'},
+    {word: 'Tarikat', meaning: '1. Yollar. 2. Allah\'a ulaştıran yol. 3. Vasıta, meslek.'},
+    {word: 'Tarik-i Şam', meaning: 'Şam yolları'},
+    {word: 'Tarumar', meaning: 'Karmakarışık, dağınık.'},
+    {word: 'Tasarruf', meaning: 'Parayı veya tüketilebilecek herhangi bir şeyi dikkatli kullanma, idareli harcama.'},
+    {word: 'Tasavvuf', meaning: 'Tanrımın varlığını, birliğini, niteliğini ve evrenin oluşumunu; varlık birliğiyle, yaratılanla yaratanın bir oluşu aynı kaynaktan gelişi anlayışıyla açıklayan dinsel ve felsefesi akım.'},
+    {word: 'Tasavvur', meaning: 'Düşünme, hayal etme.'},
+    {word: 'Tasvir', meaning: 'Göz önünde canlandırmak resmini yapmak, canlandırarak anlatma, ifade etme.'},
+    {word: 'Tatar', meaning: 'Postacı.'},
+    {word: 'Tatbik', meaning: 'Uygulama.'},
+    {word: 'Tavaf', meaning: 'Etrafında dönmek.'},
+    {word: 'Tavazün', meaning: 'Eşitlik.'},
+    {word: 'Tay olmak', meaning: 'Bir derde ortak olmak.'},
+    {word: 'Tayf', meaning: 'Uykuda veya karanlıkta gözde tecessüm eden şekiller, hayaller.'},
+    {word: 'Tazallüm', meaning: 'Zulüm görmekten , acımasızlıktan yakınma, sızlanma, ağlaşma.'},
+    {word: 'Tazyik', meaning: 'Basınç.'},
+    {word: 'Teaddi', meaning: 'Düşmanlık, ezme.'},
+    {word: 'Teâli', meaning: 'Yükselmek.'},
+    {word: 'Tebassur', meaning: 'Göz açıklığı, ileri görüş.'},
+    {word: 'Tebessül', meaning: 'Somurtma, surat asma.'},
+    {word: 'Tebid', meaning: 'Rapor.'},
+    {word: 'Tebliğ', meaning: 'Bildiri.'},
+    {word: 'Tecelli -zar-ı nur-i yezdanı', meaning: 'Allah\'ın ışığının tecelli ettiği yer.'},
+    {word: 'Tecelli', meaning: 'Görünmek.'},
+    {word: 'Tecessüs', meaning: 'Gizlice araştırma, anlama merakı.'},
+    {word: 'Tefekkür', meaning: 'Düşünce, düşünme, düşünüş.'},
+    {word: 'Tefrika', meaning: '1.Fikir ayrılığı yaşama. 2. Süreli yayınlarda bölüm bölüm yayımlanan, birbirini tamamlayan yazı dizisi.'},
+    {word: 'Tegafül', meaning: 'Anlamazlıktan gelme.'},
+    {word: 'Tehavvür', meaning: 'Çok öfkelenme ,öfkeden kabarma.'},
+    {word: 'Tehyic', meaning: 'Coşturmak.'},
+    {word: 'Tekamül', meaning: 'Olgunlaşma, olgunluk, ilerleme.'},
+    {word: 'Tekasüf', meaning: 'Yoğunlaşma, sıklaşma.'},
+    {word: 'Teklis', meaning: 'Kireç haline getirmek.'},
+    {word: 'Tekmil', meaning: 'Tam duruma getirme, tamamlama.'},
+    {word: 'Tekvin', meaning: 'Yoktan var etme, meydana getirmek, yaratmak.'},
+    {word: 'Tekvir', meaning: 'Kıvırmak, sarmak, yuvarlamak.'},
+    {word: 'Tel\'mun', meaning: 'Sağlamak.'},
+    {word: 'Tel\'in', meaning: 'Lanetlemek.'},
+    {word: 'Temas', meaning: 'İlişki ve bağ kurma.'},
+    {word: 'Temaşa', meaning: 'Seyretme.'},
+    {word: 'Temayül', meaning: 'Meyletmek, yöneltmek ve eğilim.'},
+    {word: 'Temkin', meaning: 'Bir işi veya sonucu düşünerek ölçülü, hesaplı davranma.'},
+    {word: 'Tenha', meaning: 'Yalnız, tek.'},
+    {word: 'Tenkid', meaning: 'Eleştirme.'},
+    {word: 'Tenkil', meaning: 'Uzaklaştırma, düşman veya zaralı kimseleri topluca ortadan kaldırma.'},
+    {word: 'Tenzih', meaning: 'Kusur kondurmama , ayrı tutma.'},
+    {word: 'Ter', meaning: 'Bir şeyin ilk zamanı.'},
+    {word: 'Terakki', meaning: 'İlerleme, yükselme.'},
+    {word: 'Terane', meaning: 'Ezgi, nağme.'},
+    {word: 'Tereddüt', meaning: 'şüphe duymaya başlamak'},
+    {word: 'Tersim', meaning: 'Resmetme'},
+    {word: 'Tesaddi', meaning: 'Bildirmek.'},
+    {word: 'Tesavir', meaning: 'Tasvirler.'},
+    {word: 'Teslis', meaning: 'Üçe çıkarma, üçleme.'},
+    {word: 'Teşhis', meaning: 'Kişileştirme.'},
+    {word: 'Teşriye', meaning: 'Kanun, hüküm.'},
+    {word: 'Tetkik', meaning: 'Araştırma.'},
+    {word: 'Tevabi', meaning: 'Tabi olanlar, bağlı olanlar, uyanlar.'},
+    {word: 'Tevcih', meaning: 'Belli bir yöne döndürme, yönetmek.'},
+    {word: 'Tevekkül', meaning: 'Sebeplere tevessül ettikten sonra neticesini Allah\'a bırakma, Allah\'a dayanma ve güvenme.'},
+    {word: 'Tevfik', meaning: 'Allah\' in hayırlı işlerde kişiyi başarılı kılması anlamında kelam, terim.'},
+    {word: 'Tevkise', meaning: 'Durdurmak.'},
+    {word: 'Tevzi', meaning: 'Dağıtma, üleştirme.'},
+    {word: 'Teyid', meaning: 'Destekleme.'},
+    {word: 'Tezahür', meaning: 'Ortaya çıkma, belirme.'},
+    {word: 'Tezebzüz', meaning: 'Kararlık.'},
+    {word: 'Tezelzüz', meaning: 'Sarsılma, sallanma.'},
+    {word: 'Tezin', meaning: 'Ezan okutmak.'},
+    {word: 'Tıfıl', meaning: 'Küçük çocuk, bebek.'},
+    {word: 'Tilavet', meaning: 'Kur\'an-ı Kerim\'i yüksek sesle, güzel ve yöntemince okuma.'},
+    {word: 'Timsal', meaning: 'Benzeri.'},
+    {word: 'Tiynet', meaning: 'Yaradılış, huy.'},
+    {word: 'Tufeylat', meaning: '1. Çocuklar, bebekler. 2. Parazitler.'},
+    {word: 'Tuhfe', meaning: 'Hediye.'},
+    {word: 'Turab', meaning: 'Toz ve toprak.'},
+    {word: 'Tüfan', meaning: 'Günlerce ortalığı sellerin aldığı, çok yeğin ve yoğun olarak yağan yağmur.'},
+    {word: 'Türek', meaning: '1. Tepelerin arasındaki çıkıntı. 2. Kuş yuvası.'},
+    {word: 'Tütsü', meaning: 'Büyü, ilaç yapmak ya da dinsel törenlerde çevrenin güzel kokmasını sağlamak için yakılan kokulu madde.'}
+];
+
+dictionaryData['U'] = [
+    {word: 'Ukba', meaning: 'ahiret'},
+    {word: 'Ukde', meaning: 'düğüm, bağ, karışık ve müşkil iş. Zorluk, zor iş. 2. Ağaçlık yer 3. Pelteklik, kekemelik 4. Arzu edip de ulaşamadığından dolayı içe dert olan şey.'},
+    {word: 'Ulema', meaning: 'bilginler,alimler, osmanlıda ilmiye sınıf mensupları için kullanılan unvan'},
+    {word: 'Ulum', meaning: 'ilimler'},
+    {word: 'Ulum', meaning: 'ilimler, bilimler'},
+    {word: 'Ulumun', meaning: 'âlimler'},
+    {word: 'Ulvi', meaning: 'yüce'},
+    {word: 'Umman', meaning: 'akdeniz okyanusu'},
+    {word: 'Umumen', meaning: 'bütün, hep'},
+    {word: 'Unsur', meaning: 'öğe, ilke'},
+    {word: 'Urefa', meaning: 'arifler'},
+    {word: 'Üdeba', meaning: 'edipler, edebiyatçılar, zarif kimseler.'},
+    {word: 'Üm', meaning: 'ana'},
+    {word: 'Ümid', meaning: 'arzu, istek'},
+    {word: 'Ümmet', meaning: 'bir peygambere inanıp onun yolunu seçen kimselerin tümü'},
+    {word: 'Ümmü\'l kitab', meaning: 'bütün nesne ve olaylara ilişkin ilahi ve ilim ve takdirin kayıtlı bulunduğu kitap'},
+    {word: 'Üryan', meaning: 'çıplak'}
+];
+
+dictionaryData['V'] = [
+    {word: 'Vaaz', meaning: 'Vaizlerin cami, mesat gibi yerlerde yaptığı genellikle öğüt niteliği taşıyan dinsel konuşma'},
+    {word: 'Vabeste', meaning: 'Bağlı'},
+    {word: 'Vahdet', meaning: '1. Yalnızlık, teklik, birliktelik 2.Allah\'a yakınlık,Allah\'a ulaşma'},
+    {word: 'Vahid-seray-ı', meaning: 'Dinlendirici yer'},
+    {word: 'Vak\'a', meaning: 'Olup geçen şey, hadise, olay'},
+    {word: 'Vakar', meaning: 'Ağırbaşlılık, temkinlilik'},
+    {word: 'Vakfız', meaning: 'Haberdar olmak'},
+    {word: 'Vakt', meaning: 'Zaman'},
+    {word: 'Vaktǎ', meaning: 'Ne zaman, ne vakit'},
+    {word: 'Vakur', meaning: 'Ağırbaşlı, temkinlli'},
+    {word: 'Valide', meaning: 'Doğuran, ana'},
+    {word: 'Vǎpesin', meaning: 'Son, en sondaki, en gerideki'},
+    {word: 'Varak', meaning: 'Yaprak, kağıt vaya kitap yaprağı'},
+    {word: 'Vasıta', meaning: '1. İki şeyi birbirine bitiştiren üçüncü 2. aracı, arada bulunan'},
+    {word: 'Vasi', meaning: 'Geniş, açık, enli, bol'},
+    {word: 'Vaz etmek', meaning: 'koymak, konulmak'},
+    {word: 'Vaz', meaning: 'uydurmak'},
+    {word: 'Vecd', meaning: 'Hayranlık duymak'},
+    {word: 'Vecd', meaning: 'Kendinden geçecek derecede dalgınlık'},
+    {word: 'Veciz', meaning: 'Kısa, derli toplu'},
+    {word: 'Vekil-i umurun', meaning: 'İşleri gören kişi'},
+    {word: 'Veled', meaning: 'Evlat, erkek evlad'},
+    {word: 'Velvele', meaning: '1. Şaşkınlık 2. Gürültü, patırtı, yaygara, şamata'},
+    {word: 'Vezaif', meaning: 'Vazifeler, ödevler'},
+    {word: 'Vezir', meaning: 'Osmanlı imparatorluğu döneminde devletin bakanlık valilik gibi yüksek görevlerinde bulunan kimse'},
+    {word: 'Viran', meaning: 'Yıkık, yıkılmış'},
+    {word: 'Visǎl', meaning: 'Ulaşma, bitişme'},
+    {word: 'Vukuf', meaning: '1: Durma, duruş 2:Bir halde, olduğu gibi kalma, ilerleyip veya gerilememe'},
+    {word: 'Vücud', meaning: '1. bulunma, var olma, varlık 2. İnsan veya hayvan gövdesi'},
+    {word: 'Vükela', meaning: 'Vekiller, kabine azası,bakanlar'}
+];
+
+dictionaryData['Y'] = [
+    {word: 'Yâd', meaning: 'Anma, hatırlama'},
+    {word: 'Yafta', meaning: 'Bir malın cinsini, fiatını ve sairesini belirten kâğıt'},
+    {word: 'Yahud', meaning: 'Yahudi, Hz.Yakup\'un oğlu Yahuda soyundan gelenler'},
+    {word: 'Yahut', meaning: 'Veya, isterseniz'},
+    {word: 'Yakamoz', meaning: 'geceleri denizde, balıkların ya da sandal küreklerinin kımıldanışıyla su içinde oluşan ışıltı'},
+    {word: 'Yal ü bal', meaning: 'boy pos düzgünlüğü'},
+    {word: 'Yâl', meaning: 'boyun, gerdan'},
+    {word: 'Yalçın', meaning: '(dağ, kaya vb. için) çıkılamayacak denli dik ve sarp'},
+    {word: 'Yâr', meaning: 'sevgili'},
+    {word: 'Yârân', meaning: 'dostlar'},
+    {word: 'Yâve-gülan', meaning: 'saçmasapan konuşan'},
+    {word: 'Ye\'s', meaning: 'ümitsizlik, elem, keder'},
+    {word: 'Yed', meaning: '1. El 2. Kuvvet, kudret, gü.'},
+    {word: 'Yedullah', meaning: 'Allah\'ın kudreti'},
+    {word: 'Yegane', meaning: 'tek, biricik'},
+    {word: 'Yehud', meaning: 'Yahudiler'},
+    {word: 'Yek- meal', meaning: 'tek anlam'},
+    {word: 'Yekpare', meaning: 'tek parça, bir parçadan ibaret olan, bütün'},
+    {word: 'Yel', meaning: 'pehlivan, şampiyon'},
+    {word: 'Yelda', meaning: 'uzun'},
+    {word: 'Yesâr', meaning: '1. Varlık, zenginlik 2. Sol, sol taraf'},
+    {word: 'Yezdân', meaning: 'Zerdüştlerde hayır İlahı'},
+    {word: 'Yosma', meaning: 'genç ve güzel baştan çıkarıcı kadın'}
+];
+
+dictionaryData['Z'] = [
+    {word: 'Zade-i hür', meaning: 'hür oğul'},
+    {word: 'Zafer-yab', meaning: 'zafer bulan, başarı gösteren, aradığı şeye erişen'},
+    {word: 'Zaid', meaning: 'artan, artıran'},
+    {word: 'Zairsiz mazarında', meaning: 'ziyaretçisi olmayan'},
+    {word: 'Zalâm', meaning: 'karanlık'},
+    {word: 'Zan', meaning: 'sanma, sanı, sezme'},
+    {word: 'Zebun', meaning: 'güçsüz, zayıf, aciz'},
+    {word: 'Zelil Eşhâs', meaning: 'hor, hakir, alçak, aşağı tutulan kişiler'},
+    {word: 'Zelil', meaning: 'hot, hakir, alçak, aşağı tutulan, aşağılanan, horlanan'},
+    {word: 'Zelzele', meaning: '1. Irgalama, sarsma 2. Yer sarsıntısı, deprem'},
+    {word: 'Zembili', meaning: 'hasırdan üretilmiş olan yan taraflarında taşımayı kolaylaştırmak için kulp bulunan sepet'},
+    {word: 'Zemzem', meaning: 'kabe yakınlarındaki mübarek su'},
+    {word: 'Zeval', meaning: '1. yerinden ayrılıp, gitme 2. Zail olma, sona erme'},
+    {word: 'Zıll', meaning: 'gölge'},
+    {word: 'Zillet', meaning: 'horluk, hakirlik, alçaklık, aşağılık'},
+    {word: 'Zimmi', meaning: 'İslam Devleti tebaasından olan ve haraç veren Hıristiyanlar, Yahudiler'},
+    {word: 'Zindegan', meaning: 'zinde olanlar, diriler'},
+    {word: 'Zira', meaning: 'çünkü'},
+    {word: 'Zi-ruh', meaning: 'canlı'},
+    {word: 'Ziya', meaning: 'ışık, aydınlık'},
+    {word: 'Ziya-riz', meaning: 'gizli ışık saçan, aydınlık dağıtan'},
+    {word: 'Ziya-yı ilm', meaning: 'ilimin ışığı'},
+    {word: 'Zuhur', meaning: 'meydana çıkmak, görünür olmak'},
+    {word: 'Zulimât', meaning: 'karanlık yokluklar'},
+    {word: 'Zulmet', meaning: 'karanlık, yokluk'}
+];
+
+    const searchBox = document.getElementById('search-box');
+    const searchResults = document.getElementById('search-results');
+
+    const allWords = [];
+    for (const letter in dictionaryData) {
+        dictionaryData[letter].forEach(item => {
+            allWords.push({
+                word: item.word,
+                meaning: item.meaning,
+                letter: letter
+            });
+        });
+    }
+
+    searchBox.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        if (searchTerm.length < 2) {
+            searchResults.classList.remove('show');
+            return;
+        }
+
+        const filteredWords = allWords.filter(item => 
+            item.word.toLowerCase().includes(searchTerm) || 
+            item.meaning.toLowerCase().includes(searchTerm)
+        );
+
+        displaySearchResults(filteredWords);
+    });
+
+    function displaySearchResults(results) {
+        searchResults.innerHTML = '';
+        
+        if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-result-item">Sonuç bulunamadı</div>';
+        } else {
+            results.slice(0, 10).forEach(item => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'search-result-item';
+                resultItem.innerHTML = `
+                    <div class="search-word">${item.word}</div>
+                    <div class="search-meaning">${item.meaning}</div>
+                `;
+                resultItem.addEventListener('click', function() {
+                    searchBox.value = item.word;
+                    searchResults.classList.remove('show');
+                    
+                    document.getElementById('book').style.display = 'none';
+                    document.getElementById('dictionary').classList.add('show');
+                    showWords(item.letter);
+                    document.getElementById('dictionary').scrollIntoView({behavior: 'smooth'});
+                });
+                searchResults.appendChild(resultItem);
+            });
+        }
+        
+        searchResults.classList.add('show');
+    }
+
+
+    document.addEventListener('click', function(event) {
+        if (!searchBox.contains(event.target) && !searchResults.contains(event.target)) {
+            searchResults.classList.remove('show');
+        }
+    });
+
+   
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            searchResults.classList.remove('show');
+            searchBox.blur();
+        }
+    });
+</script>
+</body>
+</html>
